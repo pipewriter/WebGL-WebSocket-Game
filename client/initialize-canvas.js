@@ -5,6 +5,7 @@
     canvas.style.backgroundColor = "black";
     window.cw = canvas.width;
     window.ch = canvas.height;
+    window.cavas = canvas;
 })();
 
-//Outputs: ch cw 
+//Outputs: ch cw canvas
