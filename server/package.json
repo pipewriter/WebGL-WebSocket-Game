@@ -1,0 +1,23 @@
+{
+  "name": "horsey.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pipewriter/horsey.io.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pipewriter/horsey.io/issues"
+  },
+  "homepage": "https://github.com/pipewriter/horsey.io#readme",
+  "dependencies": {
+    "performance-now": "^2.1.0",
+    "ws": "^5.2.2"
+  }
+}
