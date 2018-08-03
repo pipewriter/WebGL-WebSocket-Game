@@ -1,11 +1,18 @@
-(() => {
-    let canvas = document.getElementById("canvas");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    canvas.style.backgroundColor = "black";
-    window.cw = canvas.width;
-    window.ch = canvas.height;
-    window.cavas = canvas;
-})();
+// Exposes canvas.width, canvas.height, canvas.el
 
-//Outputs: ch cw canvas
+(function createCanvas(){
+    let canvas = document.getElementById("canvas");
+    window.canvas.el = canvas;
+    function setCanvasToSize(width, height){
+        canvas.width = width;
+        canvas.height = height;
+        window.canvas.width = width;
+        window.canvas.height = height;
+    };
+    setCanvasToSize(window.innerWidth, window.innerHeight);
+    window.addEventListener("resize", function windowResize(resizeEvent){
+        const {innerHeight:height, innerWidth:width} = resizeEvent.currentTarget || {};
+        console.log(height, width);
+        setCanvasToSize(width, height);
+    });
+})();
