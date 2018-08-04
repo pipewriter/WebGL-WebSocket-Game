@@ -1,5 +1,9 @@
-(() => {
 
+(async () => {
+    let fragmentShaderCode = await window.utils.makeRequest("GET", "fragmentShader.glsl");
+    let vertexShaderCode = await window.utils.makeRequest("GET", "vertexShader.glsl");
+    console.log(fragmentShaderCode)
+    console.log(vertexShaderCode)
     var mxVal = 0;
     var myVal = 0;
     gl = canvas.getContext("webgl");
@@ -8,11 +12,11 @@
     gl.enable(gl.DEPTH_TEST);
 
     const fShader = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fShader,window.fragmentShader);
+    gl.shaderSource(fShader, fragmentShaderCode);
     gl.compileShader(fShader);
     
     const vShader = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vShader,window.vertexShader);
+    gl.shaderSource(vShader, vertexShaderCode);
     gl.compileShader(vShader);
 
     if (!gl.getShaderParameter(fShader, gl.COMPILE_STATUS)) {

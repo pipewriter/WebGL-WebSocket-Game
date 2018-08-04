@@ -12,7 +12,6 @@
     setCanvasToSize(window.innerWidth, window.innerHeight);
     window.addEventListener("resize", function windowResize(resizeEvent){
         const {innerHeight:height, innerWidth:width} = resizeEvent.currentTarget || {};
-        console.log(height, width);
         setCanvasToSize(width, height);
     });
 })();
