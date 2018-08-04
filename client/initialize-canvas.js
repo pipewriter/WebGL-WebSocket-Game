@@ -6,8 +6,10 @@
     function setCanvasToSize(width, height){
         canvas.width = width;
         canvas.height = height;
-        window.canvas.width = width;
-        window.canvas.height = height;
+        // canvas.style.width = width + "px";
+        // canvas.style.height = height + "px";
+        window.canvas.width = canvas.width;
+        window.canvas.height = canvas.height;
     };
     setCanvasToSize(window.innerWidth, window.innerHeight);
     window.addEventListener("resize", function windowResize(resizeEvent){

@@ -2,8 +2,6 @@
 (async () => {
     let fragmentShaderCode = await window.utils.makeRequest("GET", "fragmentShader.glsl");
     let vertexShaderCode = await window.utils.makeRequest("GET", "vertexShader.glsl");
-    console.log(fragmentShaderCode)
-    console.log(vertexShaderCode)
     var mxVal = 0;
     var myVal = 0;
     gl = canvas.getContext("webgl");
@@ -77,7 +75,7 @@
     
     var elapsedUniformLocation = gl.getUniformLocation(shaderProgram, 'elapsed');
     var mouseUniformLocation = gl.getUniformLocation(shaderProgram, 'mousePos');
-    
+    gl.viewport(0, 0, window.canvas.width, window.canvas.height);
     var LOOP_CONSTANT = 5;
     function repeatRender(){
         function step(timestamp) {
