@@ -48,8 +48,10 @@ async function initializeFromConfig({vertFile, fragFile, vertAttributes}){
     gl.useProgram(shaderProgram);
     console.log(shaderProgram);
 
-    const vertexBuffer = gl.createBuffer();
-    const triangleBuffer = gl.createBuffer();
+    const vertexBuffer1 = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer1);
+    const triangleBuffer1 = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, triangleBuffer1);
 
     let stride = 0;
     vertAttributes.forEach(attrib => {
@@ -71,9 +73,9 @@ async function initializeFromConfig({vertFile, fragFile, vertAttributes}){
         offset += vertAttrib.size; 
     }
     return function _drawElements(vertexData, indexData){
-        gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer1);
         gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertexData),gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, triangleBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, triangleBuffer1);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indexData),gl.STATIC_DRAW);
 
         gl.drawElements(gl.TRIANGLES, indexData.length, gl.UNSIGNED_SHORT, 0);
