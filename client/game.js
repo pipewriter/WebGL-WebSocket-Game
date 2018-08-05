@@ -1,7 +1,7 @@
 
 (async () => {
-    var mxVal = 0;
-    var myVal = 0;
+    var mxVal = 0.5;
+    var myVal = 0.5;
     await initializeWebGL;
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
@@ -44,7 +44,7 @@
     var elapsedUniformLocation = gl.getUniformLocation(shaderProgram, 'elapsed');
     var mouseUniformLocation = gl.getUniformLocation(shaderProgram, 'mousePos');
     
-    var LOOP_CONSTANT = 5;
+    var LOOP_CONSTANT = 20;
     function repeatRender(){
         function step(timestamp) {
             var seconds = timestamp/1000;

@@ -43,7 +43,7 @@ void main(void) {
     int row = trueN/50;
     int column = trueN-row*50;
     float angle = 0.0;
-    float magnitude = sqrt(y*y + x*x);
+    float magnitude = sqrt(y*y + x*x) + sin(PI);
     if(x == 0.0){
         if(y > 0.0){
             angle = PI/2.0;
