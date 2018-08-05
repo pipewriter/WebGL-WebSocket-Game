@@ -45,14 +45,19 @@
     // var mouseUniformLocation = gl.getUniformLocation(shaderProgram, 'mousePos');
     
 
+    // const vertData = [
+    //     0.8, 0.8, 10.0,     0.2, 0.3, 3.0, 
+    //     0.2, 0.1, 10.0,     0.2, 0.4, 3.0, 
+    //     0.1, 0.2, 10.0,     0.3, 0.8, 3.0
+    // ];
     const vertData = [
-        0.8, 0.8, 10.0,     0.2, 0.3, 0.0, 
-        0.2, 0.1, 10.0,     0.2, 0.4, 0.0, 
-        0.1, 0.2, 10.0,     0.3, 0.8, 0.0
+        1.0, 1.0, 2.0, 1.0, 1.0, 2.0,
+        0.0, 0.0, 8.0, 1.0, 0.0, 3.0, 
+        10.0, 5.0, 3.0, 5.0, 1.0, 2.0
     ];
 
-    const indexData = [0, 1, 2];
-    
+    const indexData = [2, 1, 0, 2, 1,9,3, 9];
+
     const drawTri = await initializeFromConfig(config);
     var LOOP_CONSTANT = 200;
     function repeatRender(){
