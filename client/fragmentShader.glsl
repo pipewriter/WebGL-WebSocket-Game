@@ -19,7 +19,7 @@ void main(void) {
         float distance = sqrt(d1*d1 + d2*d2) + angle*2.0;
         float col = mod(distance*10.0-fragmentTime*150.0, 10.0);
 
-        gl_FragColor = vec4(col/5.0, col/10.0, col/20.0, 1.0);
+        gl_FragColor = vec4(col/3.0, col/10.0, col/20.0, 1.0);
     }else{
         gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
     }

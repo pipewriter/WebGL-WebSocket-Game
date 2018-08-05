@@ -1,6 +1,6 @@
 
 (async () => {
-    var mxVal = 0.3;
+    var mxVal = 0.5;
     var myVal = 0.5;
     await initializeWebGL;
     vertexBuffer = gl.createBuffer();
@@ -41,20 +41,32 @@
     gl.enableVertexAttribArray(vertexTrianglenAttrib);
     gl.vertexAttribPointer(vertexTrianglenAttrib,1,gl.FLOAT,false, 4 * Float32Array.BYTES_PER_ELEMENT ,3*Float32Array.BYTES_PER_ELEMENT); 
     
-    var elapsedUniformLocation = gl.getUniformLocation(shaderProgram, 'elapsed');
-    var mouseUniformLocation = gl.getUniformLocation(shaderProgram, 'mousePos');
+    // var elapsedUniformLocation = gl.getUniformLocation(shaderProgram, 'elapsed');
+    // var mouseUniformLocation = gl.getUniformLocation(shaderProgram, 'mousePos');
     
-    var LOOP_CONSTANT = 40;
+
+    const vertData = [
+        0.8, 0.8, 10.0,     0.2, 0.3, 0.0, 
+        0.2, 0.1, 10.0,     0.2, 0.4, 0.0, 
+        0.1, 0.2, 10.0,     0.3, 0.8, 0.0
+    ];
+
+    const indexData = [0, 1, 2];
+    
+    const drawTri = await initializeFromConfig(config);
+    var LOOP_CONSTANT = 200;
     function repeatRender(){
         function step(timestamp) {
+
             var seconds = timestamp/1000;
             var elapsed = (seconds%LOOP_CONSTANT)/LOOP_CONSTANT;
-            gl.uniform1f(elapsedUniformLocation, new Float32Array([elapsed]));
-            gl.uniform2fv(mouseUniformLocation, new Float32Array([mxVal, myVal]));
+            // gl.uniform1f(elapsedUniformLocation, new Float32Array([elapsed]));
+            // gl.uniform2fv(mouseUniformLocation, new Float32Array([mxVal, myVal]));
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            gl.drawElements(gl.TRIANGLES, indexArray.length, gl.UNSIGNED_SHORT, 0);
-            
+            // gl.drawElements(gl.TRIANGLES, indexArray.length, gl.UNSIGNED_SHORT, 0);
+            drawTri(vertData, indexData);
+            return;
             window.requestAnimationFrame(step);
         }
         window.requestAnimationFrame(step);
