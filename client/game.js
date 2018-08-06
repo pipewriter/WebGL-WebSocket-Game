@@ -70,7 +70,7 @@
     const id2 = [0, 1, 2];
     const dt2 = await initializeFromConfig(config);
 
-    // const drawTri = await initializeFromConfig(config);
+    const drawTri = await initializeFromConfig(config);
     console.log(gl.getParameter(gl.ELEMENT_ARRAY_BUFFER_BINDING));
     var LOOP_CONSTANT = 200;
     function repeatRender(){
@@ -83,7 +83,7 @@
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             // gl.drawElements(gl.TRIANGLES, indexArray.length, gl.UNSIGNED_SHORT, 0);
-            // drawTri(vertData, indexData);
+            drawTri(vertData, indexData);
             dt2(vd2, id2);
             return;
             window.requestAnimationFrame(step);

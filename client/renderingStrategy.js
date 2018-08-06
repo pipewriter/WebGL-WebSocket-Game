@@ -53,28 +53,35 @@ async function initializeFromConfig({vertFile, fragFile, vertAttributes}){
     const triangleBuffer1 = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, triangleBuffer1);
 
+
     let stride = 0;
+    let offset = 0;
     vertAttributes.forEach(attrib => {
         stride += attrib.size;
+        attrib.location = gl.getAttribLocation(shaderProgram, attrib.handle);
+        attrib.offset = offset;
+        offset += attrib.size;
     });
 
-    let offset = 0;
-    for(const vertAttrib of vertAttributes){
-        const attrib = gl.getAttribLocation(shaderProgram, vertAttrib.handle); 
-        gl.enableVertexAttribArray(attrib);
-        gl.vertexAttribPointer(
-            attrib,
-            vertAttrib.size,
-            gl.FLOAT,
-            false,
-            stride * Float32Array.BYTES_PER_ELEMENT,
-            offset * Float32Array.BYTES_PER_ELEMENT
-        );
-        offset += vertAttrib.size; 
-    }
     return function _drawElements(vertexData, indexData){
+
+        gl.useProgram(shaderProgram);
+        
         gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer1);
         gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertexData),gl.STATIC_DRAW);
+
+        for(const attrib of vertAttributes){
+            gl.enableVertexAttribArray(attrib.location);
+            gl.vertexAttribPointer(
+                attrib.location,
+                attrib.size,
+                gl.FLOAT,
+                false,
+                stride * Float32Array.BYTES_PER_ELEMENT,
+                attrib.offset * Float32Array.BYTES_PER_ELEMENT
+            );
+        }
+
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, triangleBuffer1);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indexData),gl.STATIC_DRAW);
 
