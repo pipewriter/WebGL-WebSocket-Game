@@ -24,4 +24,14 @@
           xhr.send();
         });
     }
+
+    window.utils.loadImageElement = function loadImageElement(url) {
+        return new Promise(function (resolve, reject){
+          const image = new Image();
+          image.onload = function(){
+            resolve(image);
+          }
+          image.src = url;
+        });
+    }
 })();

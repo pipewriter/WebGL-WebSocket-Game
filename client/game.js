@@ -52,9 +52,9 @@
     //     0.1, 0.2, 10.0,     0.3, 0.8, 3.0
     // ];
     const vertData = [
-        0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
-        0.5, 0.7, 0.2, 0.5, 0.7, 0.5,
-        0.3, 0.6, 0.8, 0.3, 0.6, 0.8
+        0, 0, 0.5, 0.5, 0.5, 0.5,
+        0, 0.7, 0.2, 0.5, 0.7, 0.5,
+        0.5, 0.6, 0.8, 0.3, 0.6, 0.8
     ];
 
     const indexData = [0, 1, 2];
@@ -69,6 +69,14 @@
     ];
     const id2 = [0, 1, 2];
     const dt2 = await initializeFromConfig(config);
+
+    const vd3 = [
+        0, 0, 0.9, 0.5, 0.5, 0.5, 1.0, 1.0,
+        0, 0.3, 0.9, 0.5, 0.7, 0.5, 0.0, 1.0,
+        0.3, 0, 0.9, 0.3, 0.6, 0.8, 1.0, 0.0
+    ];
+    const id3= [0, 1, 2];
+    const dt3 = await initializeImageFromConfig(imgConfig);
 
     const drawTri = await initializeFromConfig(config);
     console.log(gl.getParameter(gl.ELEMENT_ARRAY_BUFFER_BINDING));
@@ -85,6 +93,7 @@
             // gl.drawElements(gl.TRIANGLES, indexArray.length, gl.UNSIGNED_SHORT, 0);
             drawTri(vertData, indexData);
             dt2(vd2, id2);
+            dt3(vd3, id3);
             return;
             window.requestAnimationFrame(step);
         }
