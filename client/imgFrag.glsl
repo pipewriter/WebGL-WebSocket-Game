@@ -11,6 +11,6 @@ void main(void) {
         (fragColor.r + tColor.r)/2.0,
         (fragColor.g + tColor.g)/2.0,
         (fragColor.b + tColor.b)/2.0,
-        0.1
+        0.5
     );
 }

@@ -19,8 +19,7 @@ async function initializeFromConfig({vertFile, fragFile, vertAttributes}){
         window.utils.makeRequest("GET", vertFile),
         window.utils.makeRequest("GET", fragFile)
     ]);
-    console.log(vertCode);
-    
+
     const vShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vShader, vertCode);
     gl.compileShader(vShader);
@@ -46,7 +45,6 @@ async function initializeFromConfig({vertFile, fragFile, vertAttributes}){
     }
 
     gl.useProgram(shaderProgram);
-    console.log(shaderProgram);
 
     const vertexBuffer1 = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer1);

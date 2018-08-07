@@ -25,7 +25,6 @@ async function initializeImageFromConfig({vertFile, fragFile, imageUrl, vertAttr
         window.utils.makeRequest("GET", fragFile),
         window.utils.loadImageElement(imageUrl)
     ]);
-    console.log(vertCode);
 
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -86,10 +85,8 @@ async function initializeImageFromConfig({vertFile, fragFile, imageUrl, vertAttr
         attrib.location = gl.getAttribLocation(shaderProgram, attrib.handle);
         attrib.offset = offset;
         offset += attrib.size;
-        console.log(attrib);
     });
 
-    console.log(vertAttributes)
     return function _drawElements(vertexData, indexData){
 
         gl.useProgram(shaderProgram);
