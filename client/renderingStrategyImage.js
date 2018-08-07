@@ -1,7 +1,7 @@
 const imgConfig = {
     vertFile: "imgVert.glsl",
     fragFile: "imgFrag.glsl",
-    imageUrl: "ff.png",
+    imageUrl: "guy.png",
     vertAttributes: [
         {
             handle: "vertPos",
