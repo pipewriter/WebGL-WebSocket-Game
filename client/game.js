@@ -11,7 +11,7 @@
     const id3= [0, 1, 2, 1, 2, 3];
     const dt3 = await initializeImageFromConfig(imgConfig);
     
-    const d4 = await window.drawpic.init("drawPicture/guy.png");
+    const d4 = await window.drawpic.init("face-big.png");
 
     const drawTri = await initializeFromConfig(config);
     let r = 0;
