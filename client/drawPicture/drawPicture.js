@@ -35,14 +35,14 @@ window.drawpic.init = async function initDrawPic(imageUrl){
             a + Math.PI,
             -a
         ];
-        let d1 = Math.sin(a1 + r)*sq2*(dist);
-        let d2 = Math.sin(a2 + r)*sq2*(dist);
-        let d3 = Math.sin(a3 + r)*sq2*(dist);
-        let d4 = Math.sin(a4 + r)*sq2*(dist);
-        let e1 = Math.cos(a1 + r)*sq2*(dist);
-        let e2 = Math.cos(a2 + r)*sq2*(dist);
-        let e3 = Math.cos(a3 + r)*sq2*(dist);
-        let e4 = Math.cos(a4 + r)*sq2*(dist);
+        let d1 = y + Math.sin(a1 + r)*sq2*(dist);
+        let d2 = y + Math.sin(a2 + r)*sq2*(dist);
+        let d3 = y + Math.sin(a3 + r)*sq2*(dist);
+        let d4 = y + Math.sin(a4 + r)*sq2*(dist);
+        let e1 = x + Math.cos(a1 + r)*sq2*(dist);
+        let e2 = x + Math.cos(a2 + r)*sq2*(dist);
+        let e3 = x + Math.cos(a3 + r)*sq2*(dist);
+        let e4 = x + Math.cos(a4 + r)*sq2*(dist);
         const vd = [
             e4, d4, 0.9, 1.0, 1.0,
             e3, d3, 0.9, 0.0, 1.0,
