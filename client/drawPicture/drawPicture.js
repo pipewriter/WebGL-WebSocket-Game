@@ -27,8 +27,6 @@ window.drawpic.init = async function initDrawPic(imageUrl){
         let sq2 = Math.sqrt(2);
         let dist = Math.sqrt(Math.pow(h/2, 2) + Math.pow(w/2, 2));
         let a = Math.atan2(h/2, w/2)
-        console.log(a);
-        console.log(Math.sin(a), Math.cos(a))
         let [a1, a2, a3, a4] = [
             a,
             Math.PI - a,
