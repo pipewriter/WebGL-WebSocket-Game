@@ -21,8 +21,8 @@
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             dt3(vd3, id3);
-            d4({x: 0, y: 0, r, h: 1, w: 1});
-            r+= 0.01;
+            d4({x: 0, y: 0, r, h: 0.2, w: 0.8});
+            r+= 0.1;
             window.requestAnimationFrame(step);
         }
         window.requestAnimationFrame(step);

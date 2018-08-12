@@ -25,14 +25,24 @@ window.drawpic.init = async function initDrawPic(imageUrl){
     let img = await initializeImageFromConfig({...window.drawpic.config, imageUrl});
     return function draw({x, y, r, h, w}){
         let sq2 = Math.sqrt(2);
-        let d1 = Math.sin(Math.PI/4 + Math.PI/2*0 + r)*sq2*(h/2);
-        let d2 = Math.sin(Math.PI/4 + Math.PI/2*1 + r)*sq2*(h/2);
-        let d3 = Math.sin(Math.PI/4 + Math.PI/2*2 + r)*sq2*(h/2);
-        let d4 = Math.sin(Math.PI/4 + Math.PI/2*3 + r)*sq2*(h/2);
-        let e1 = Math.cos(Math.PI/4 + Math.PI/2*0 + r)*sq2*(w/2);
-        let e2 = Math.cos(Math.PI/4 + Math.PI/2*1 + r)*sq2*(w/2);
-        let e3 = Math.cos(Math.PI/4 + Math.PI/2*2 + r)*sq2*(w/2);
-        let e4 = Math.cos(Math.PI/4 + Math.PI/2*3 + r)*sq2*(w/2);
+        let dist = Math.sqrt(Math.pow(h/2, 2) + Math.pow(w/2, 2));
+        let a = Math.atan2(h/2, w/2)
+        console.log(a);
+        console.log(Math.sin(a), Math.cos(a))
+        let [a1, a2, a3, a4] = [
+            a,
+            Math.PI - a,
+            a + Math.PI,
+            -a
+        ];
+        let d1 = Math.sin(a1 + r)*sq2*(dist);
+        let d2 = Math.sin(a2 + r)*sq2*(dist);
+        let d3 = Math.sin(a3 + r)*sq2*(dist);
+        let d4 = Math.sin(a4 + r)*sq2*(dist);
+        let e1 = Math.cos(a1 + r)*sq2*(dist);
+        let e2 = Math.cos(a2 + r)*sq2*(dist);
+        let e3 = Math.cos(a3 + r)*sq2*(dist);
+        let e4 = Math.cos(a4 + r)*sq2*(dist);
         const vd = [
             e4, d4, 0.9, 1.0, 1.0,
             e3, d3, 0.9, 0.0, 1.0,
