@@ -22,8 +22,9 @@
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             dt3(vd3, id3);
-            d4({x, y: 0, r, h: Math.sin(r/3) + 1, w: Math.cos(r/3) + 1});
-            r+= 0.05;
+            let mp = window.canvas.getMousePos();
+            d4({x: (mp.x*2-1)*16/9, y: -(mp.y*2-1), r, h:  1, w: 1});
+            // r+= 0.05;
             x = Math.sin(r)
             window.requestAnimationFrame(step);
         }
