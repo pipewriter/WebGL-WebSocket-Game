@@ -42,10 +42,10 @@ window.drawpic.init = async function initDrawPic(imageUrl){
         let e3 = x + Math.cos(a3 + r)*sq2*(dist);
         let e4 = x + Math.cos(a4 + r)*sq2*(dist);
         const vd = [
-            e4, d4, 0.9, 1.0, 1.0,
-            e3, d3, 0.9, 0.0, 1.0,
-            e2, d2, 0.9, 0.0, 0.0,
-            e1, d1, 0.9, 1.0, 0.0
+            e4, d4, 0.9, 1.0, 0.0,
+            e3, d3, 0.9, 0.0, 0.0,
+            e2, d2, 0.9, 0.0, 1.0,
+            e1, d1, 0.9, 1.0, 1.0
         ];
         const id= [0, 1, 2, 0, 2, 3];
         img(vd, id);
