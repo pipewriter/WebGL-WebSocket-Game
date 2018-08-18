@@ -1,6 +1,6 @@
 
 (async () => {
-    await initializeWebGL;
+    initializeWebGL;
 
     const vd3 = [
         0, 0, 0.9, 1, 0, 0, 0.0, 1.0,
@@ -13,9 +13,7 @@
     const d4 = await window.drawpic.init("Untitled-2.png");
     const d5 = await window.drawpic.init("guy.png");
 
-    const drawTri = await initializeFromConfig(config);
     let r = 0;
-    let x = 0;
     function repeatRender(){
         function step(timestamp) {
             var seconds = timestamp/1000;
