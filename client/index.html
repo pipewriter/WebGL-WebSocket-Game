@@ -3,41 +3,25 @@
 <head>
     <meta charset="utf-8">
     <title>io game</title>
-    <link rel="stylesheet" href="canvas-styling.css">
+    <link rel="stylesheet" href="assets/css/canvas-styling.css">
 </head>
 <body>
     
-    
-<script>
-    // Create WebSocket connection.
-    const socket = new WebSocket('ws://localhost:8080');
-
-    // Connection opened
-    socket.addEventListener('open', function (event) {
-        // do nothin
-    });
-
-    // Listen for messages
-    socket.addEventListener('message', function (event) {
-        console.log('Message from server ', event.data);
-    });
-
-    function send1(){
-        socket.send(JSON.stringify({name: "parker"}));
-    }
-    function send2(){
-        socket.send(JSON.stringify({uvx:1, uvy: 0}));        
-    }
-
-</script>
+<!-- <script src="connection.js"></script> -->
 <canvas id="canvas" width="512" height="512">
     Your browser does not support the HTML5 canvas tag.
 </canvas>
-<script src="initialize-canvas.js"></script>
-<script src="vertexShader.js"></script>
-<script src="fragmentShader.js"></script>
-<script src="game.js"></script>
-<audio id="sound" src='sound.wav'></audio>
+
+<script src="js/graphics-tool/initialize-canvas.js">
+    /* exposes canvas.el canvas.height canvas.width*/
+</script>
+<script src="js/graphics-tool/utils.js"></script>
+<script src="js/graphics-tool/initialize-webgl.js"></script>
+<script src="js/graphics-tool/renderingStrategy.js"></script>
+<script src="js/graphics-tool/renderingStrategyImage.js"></script>
+<script src="js/graphics-tool/drawPicture.js"></script>
+<script src="js/game/game.js"></script>
+<!-- <audio id="sound" src='sound.wav'></audio> -->
 
 
 </body>
