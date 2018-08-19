@@ -10,8 +10,8 @@
     ];
     const id3= [0, 1, 2, 1, 2, 3];
     
-    const d4 = await window.drawpic.init("Untitled-2.png");
-    const d5 = await window.drawpic.init("guy.png");
+    const d4 = await window.drawpic.init("./assets/images/cursor.png");
+    const d5 = await window.drawpic.init("./assets/images/guy.png");
 
     let r = 0;
     function repeatRender(){
