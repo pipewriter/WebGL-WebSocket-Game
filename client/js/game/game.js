@@ -12,6 +12,7 @@
     
     const d4 = await window.drawpic.init("./assets/images/cursor.png");
     const d5 = await window.drawpic.init("./assets/images/guy.png");
+    const d6 = await window.drawpic.init("./assets/images/guy.png");
 
     let r = 0;
     function repeatRender(){
@@ -23,6 +24,7 @@
             // d4({x: (mp.x*2-1)*16/9, y: -(mp.y*2-1), r, h:  1, w: 1});
             // d4({x: 1*16/10, y: 0.1, r, h:  0.2, w: 0.2});
             d5({x: 0.5, y: 0.5,r, h:  1, w: 1})
+            d6({x: 1, y: 0.5,r, h:  1, w: 1})
             d4({x: (mp.x*16/9) +0.02, y: (mp.y)+0.02,r, h: 0.04, w: 0.04})
             // r+= 0.05;
             x = Math.sin(r)
