@@ -32,11 +32,10 @@ wss.on('connection', function connection(ws) {
     this.uvy = 0;
     this.x = INIT_X;
     this.y = INIT_Y;
-    this.vel = 10;
+    this.vel = 50;
     this.id = id++;
     
     let messageListener = (message) => {
-      console.log('received: %s', message);
       try{
         let playerData = JSON.parse(message);
         if(this.state === 'JOINED'){
@@ -95,7 +94,7 @@ wss.on('connection', function connection(ws) {
 
 let _firstSample = now();
 let _ticks = 0;
-const FREQ = 2;
+const FREQ = 60;
 
 async function burnTime(){
   function sleep(mili){
