@@ -1,6 +1,6 @@
 (function connection_stuff(){
     // Create WebSocket connection.
-    const socket = new WebSocket('ws://localhost:8080');
+    const socket = new WebSocket('ws://memoval.com:8080');
 
     // Connection opened
     socket.addEventListener('open', function (event) {
@@ -13,7 +13,7 @@
         // console.log('Message from server ', event.data);
         const data = JSON.parse(event.data);
         // console.log(data.players[0].x)
-        window.GAME.updatePlayer(data.players[0])
+        window.GAME.updatePlayers(data);
     });
 
     function send1(){
