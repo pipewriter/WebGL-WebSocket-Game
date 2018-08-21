@@ -124,11 +124,13 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
 };
 
 (async () => {
+
     const drawGuy = await window.drawpic.init("./assets/images/mari.png");
     const d4 = await window.drawpic.init("./assets/images/face-big.png");
     const d5 = await window.drawpic.init("./assets/images/dino.png");
     const d6 = await window.drawpic.init("./assets/images/mick.png");
     const d7 = await window.drawpic.init("./assets/images/satu.png");
+
 
     function repeatRender(){
         function step(timestamp) {
@@ -138,6 +140,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             let mp = window.canvas.getMousePos();
+
             window.GAME.updateDirection({mp});
             // d4({x: (mp.x*16/9) +0.02, y: (mp.y)+0.02,r, h: 0.04, w: 0.04})
             // {
