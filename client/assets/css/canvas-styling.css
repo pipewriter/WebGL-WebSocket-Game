@@ -6,6 +6,6 @@ html, body{
 #canvas{
     position: absolute;
 }
-* {
+/* * {
     cursor: none;
-}
+} */
