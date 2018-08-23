@@ -1,6 +1,7 @@
 (function connection_stuff(){
     // Create WebSocket connection.
-    const socket = new WebSocket('ws://memoval.com:8080');
+    const {wsAddress} = window.CONFIG;
+    const socket = new WebSocket(`ws://${wsAddress}`);
 
     // Connection opened
     socket.addEventListener('open', function (event) {
