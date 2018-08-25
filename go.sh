@@ -2,5 +2,5 @@
 
 echo "running"
 
-node ./server/server/serv.js &
-sudo npx http-server ./client/ -p 80
+node ~/io-game/server/server/serv.js &
+npx http-server ~/io-game/client/ -p 80

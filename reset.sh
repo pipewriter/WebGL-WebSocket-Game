@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sh ./kill.sh
-sh ./go.sh
+sh ~/io-game/kill.sh
+sh ~/io-game/go.sh
