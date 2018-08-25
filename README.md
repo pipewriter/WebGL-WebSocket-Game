@@ -8,3 +8,4 @@ I hope to get this project out sooner rather than later.
 
 ## log
 - Aug 25th 2018: git webhook now refreshes both client and server
+- Aug 25th 2018: planning on making the black hole game next
