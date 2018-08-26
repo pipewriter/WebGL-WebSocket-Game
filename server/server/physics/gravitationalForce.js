@@ -13,12 +13,14 @@ function gravitationalForce(
     },
     callback
 ){
-    const [dx, dy] = [ x1 - x2, y1 - y2 ];
-    const rmag = Math.sqrt( dx * dx + dy * dy);
+    const [dx, dy] = [ x2 - x1, y2 - y1 ];
+    let rmag = Math.sqrt( dx * dx + dy * dy);
+    if(rmag < 0.01)
+        rmag = 0.01; //avoid divide by 0
     const [rux, ruy] = [dx / rmag, dy / rmag];
     const fmag = m1 * m2 * G_CONST / (rmag * rmag);
     const [fx, fy] =  [fmag * rux, fmag * ruy];
-    callback(fx, fy);
+    callback({fx, fy});
 }
 
 module.exports = gravitationalForce;
