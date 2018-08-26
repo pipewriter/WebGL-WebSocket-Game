@@ -32,7 +32,7 @@ wss.on('connection', function connection(ws) {
     this.uvy = 0;
     this.x = INIT_X;
     this.y = INIT_Y;
-    this.vel = 50;
+    this.vel = 200;
     this.id = id++;
     
     let messageListener = (message) => {
