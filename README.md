@@ -8,4 +8,4 @@ I hope to get this project out sooner rather than later.
 
 ## log
 - Aug 25th 2018: git webhook now refreshes both client and server
-- Aug 25th 2018: fought for like 4 hours on stupid *'sudo git pull'* bullcrap
+- Aug 25th 2018: fought for like 4 hours on stupid *'sudo git pull'* bullcrap 
