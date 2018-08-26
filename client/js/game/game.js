@@ -13,41 +13,16 @@ let npcs = [];
 
 window.GAME.players = [];
 
-for(let i = 0; i < 50; i++){
-    npcs.push({
-        x: 500 + i * 25,
-        y: 500,
-        dx: -100,
-        dy: -100,
-        t: 0
-    });
-}
-for(let i = 0; i < 50; i++){
-    npcs.push({
-        x: 500 - i * 25,
-        y: 500 ,
-        dx: -100,
-        dy: -100,
-        t: 1
-    });
-}
-for(let i = 0; i < 50; i++){
-    npcs.push({
-        x: 500,
-        y: 500 + i * 25,
-        dx: -100,
-        dy: -100,
-        t: 2
-    });
-}
-for(let i = 0; i < 50; i++){
-    npcs.push({
-        x: 500,
-        y: 500 - i * 25,
-        dx: -100,
-        dy: -100,
-        t: 3
-    });
+for(let j = 0; j < 51; j++){
+    for(let i = 0; i < 51; i++){
+        npcs.push({
+            x: 0 + i * 20,
+            y: 0 + j * 20,
+            dx: -100,
+            dy: -100,
+            t: 0
+        });
+    }
 }
 window.GAME.updatePlayer = function updatePlayer({x, y}) {
     player.x = x;
@@ -149,12 +124,16 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             //     // console.log(npc)
             // }
             npcs.forEach(npc => {
-                switch(npc.t){
-                    case 0: d4({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});break;
-                    case 1: d5({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});break;
-                    case 2: d6({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});break;
-                    case 3: d7({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});break;
-                }
+                if(npc.dx+0.2 > 0 && npc.dx < 2.0
+                    && npc.dy + 0.2 > 0 && npc.dy < 1.2){
+                        switch(npc.t){
+                            case 0: d4({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});break;
+                            case 1: d5({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});break;
+                            case 2: d6({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});break;
+                            case 3: d7({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});break;
+                        }
+
+                    }
             });
             window.GAME.players.forEach(player => {
                 drawGuy({x: player.dx, y: player.dy, r: 0, h: 0.3, w: 0.3});
