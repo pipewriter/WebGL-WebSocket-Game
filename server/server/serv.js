@@ -42,6 +42,9 @@ wss.on('connection', function connection(ws) {
         this.fy = 0;
         this.id = id++;
         this.guideStrength = 10000;
+        if(id % 2 === 0){
+            this.m = 100;
+        }
 
         let messageListener = (message) => {
             try {
