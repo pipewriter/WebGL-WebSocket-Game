@@ -137,7 +137,6 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             });
             window.GAME.players.forEach(player => {
                 drawGuy({x: player.dx, y: player.dy, r: 0, h: 0.3, w: 0.3});
-                console.log(player)
             })
             // drawGuy({x: 0.8, y: 0.5, r: 0, h: 0.2, w: 0.2});
 
