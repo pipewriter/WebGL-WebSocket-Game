@@ -1,4 +1,4 @@
-const G_CONST = 100;
+const G_CONST = 1000;
 
 function gravitationalForce(
     {

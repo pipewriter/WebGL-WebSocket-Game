@@ -25,8 +25,8 @@
     let lastY = 0;
     setInterval(()=>{
         let {uvx, uvy} = window.GAME.getPlayerDirection();
-        if(uvx === lastX && uvy === lastY)
-            return;
+        // if(uvx === lastX && uvy === lastY)
+            // return;
         lastX = uvx;
         lastY = uvy;
         if(window.canvas.getMouseDown()){
