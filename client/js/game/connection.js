@@ -25,10 +25,16 @@
     let lastY = 0;
     setInterval(()=>{
         let {uvx, uvy} = window.GAME.getPlayerDirection();
-        if(uvx === lastX && uvy === lastY)
-            return;
+        // if(uvx === lastX && uvy === lastY)
+            // return;
         lastX = uvx;
         lastY = uvy;
-        socket.send(JSON.stringify({uvx, uvy}))
+        if(window.canvas.getMouseDown()){
+            console.log('mouse down');
+            socket.send(JSON.stringify({uvx, uvy}));
+        }else{
+            console.log('mouse up');
+            socket.send(JSON.stringify({uvx: 0, uvy: 0}))
+        }
     }, 17)
 })();

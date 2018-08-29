@@ -7,8 +7,12 @@
     const aspectY = 9;
     let mouseX = 0;
     let mouseY = 0;
+    let mousedown = false;
     window.canvas.getMousePos = function getMousePos(){
         return {x: mouseX, y: mouseY};
+    }
+    window.canvas.getMouseDown = function getMouseDown(){
+        return mousedown;
     }
     let filter;
     function setFilterVars({offsetX, offsetY, width, height}){
@@ -53,4 +57,10 @@
     window.onmousemove = (event) => {
         setMousePos({x: event.clientX, y: event.clientY});
     };
+    window.onmousedown = (event) => {
+        mousedown = true;
+    }
+    window.onmouseup = (event) => {
+        mousedown = false;
+    }
 })();
