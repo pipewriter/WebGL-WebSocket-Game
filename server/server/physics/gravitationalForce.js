@@ -18,7 +18,7 @@ function gravitationalForce(
     if(rmag < 0.01)
         rmag = 0.01; //avoid divide by 0
     const [rux, ruy] = [dx / rmag, dy / rmag];
-    const fmag = m1 * m2 * G_CONST / (rmag * rmag);
+    const fmag = m1 * m2 * G_CONST / (Math.pow(rmag, 1.2));
     const [fx, fy] =  [fmag * rux, fmag * ruy];
     callback({fx, fy});
 }

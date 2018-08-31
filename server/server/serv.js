@@ -44,10 +44,10 @@ wss.on('connection', function connection(ws) {
         this.y = INIT_Y;
         this.vx = 0;
         this.vy = 0;
-        this.m = 1;
+        this.m = 2;
         this.fx = 0;
         this.fy = 0;
-        this.r = 4;
+        this.r = 2.5;
         this.id = id++;
         this.guideStrength = 10000;
 
@@ -93,8 +93,8 @@ wss.on('connection', function connection(ws) {
                 }
             });
             findGuideForce(this, delta, ({fx, fy}) => {
-                sumfx += fx;
-                sumfy += fy;
+                sumfx += fx * 0.3;
+                sumfy += fy * 0.3;
             });
             boundaryClamp(this, boundary, ({out, fux, fuy, force}) => {
                 if(out){
