@@ -36,7 +36,6 @@ boundary = {
 let id = 0;
 wss.on('connection', function connection(ws) {
     function Client() {
-
         this.state = 'JOINED';
         this.uvx = 0;
         this.uvy = 0;
@@ -50,6 +49,11 @@ wss.on('connection', function connection(ws) {
         this.r = 2.5;
         this.id = id++;
         this.guideStrength = 10000;
+
+        if(id % 2 === 0){
+            this.m = 8;
+            this.r = 5;
+        }
 
         let messageListener = (message) => {
             try {
@@ -199,11 +203,13 @@ Array.prototype.forEachPlaying = (func) => {
             players: []
         };
         clients.forEachPlaying(client => {
+            const {x, y, name, id, r} = client;
             dataObj.players.push({
-                x: client.x,
-                y: client.y,
-                name: client.name,
-                id: client.id
+                x,
+                y,
+                name,
+                id,
+                r
             })
         });
         clients.forEachPlaying(client => {
