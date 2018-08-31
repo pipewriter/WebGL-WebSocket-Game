@@ -3,7 +3,7 @@ window.GAME = {};
 let player = {
     x: 0,
     y: 0,
-    dx: 0.8,
+    dx: 0.8888,
     dy: 0.5,
     uvx: 0,
     uvy: 0
@@ -100,8 +100,8 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
 
 (async () => {
 
-    const drawGuy = await window.drawpic.init("./assets/images/mari.png");
-    const d4 = await window.drawpic.init("./assets/images/face-big.png");
+    const drawGuy = await window.drawpic.init("./assets/images/blackhole.png");
+    const d4 = await window.drawpic.init("./assets/images/starryspace.png");
     const d5 = await window.drawpic.init("./assets/images/dino.png");
     const d6 = await window.drawpic.init("./assets/images/mick.png");
     const d7 = await window.drawpic.init("./assets/images/satu.png");
@@ -136,9 +136,9 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                     }
             });
             window.GAME.players.forEach(player => {
-                drawGuy({x: player.dx, y: player.dy, r: 0, h: 0.3, w: 0.3});
+                drawGuy({x: player.dx, y: player.dy, r: 0, h: 0.05, w: 0.05});
             })
-            // drawGuy({x: 0.8, y: 0.5, r: 0, h: 0.2, w: 0.2});
+                // drawGuy({x: 0.888, y: 0.5, r: 0, h: 0.05, w: 0.05});
 
             // d4({x: (mp.x*16/9) +0.02, y: (mp.y)+0.02,r, h: 0.04, w: 0.04})
             window.requestAnimationFrame(step);

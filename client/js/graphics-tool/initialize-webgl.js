@@ -1,6 +1,6 @@
 window.initializeWebGL = (function initializeWebGL(){
     gl = window.canvas.el.getContext("webgl");
-    gl.clearColor(0.8,0.5,0,1.0);
+    gl.clearColor(0,0,0,1.0);
     gl.clearDepth(1.0);
     // gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
