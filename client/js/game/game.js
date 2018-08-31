@@ -6,7 +6,8 @@ let player = {
     dx: 0.8888,
     dy: 0.5,
     uvx: 0,
-    uvy: 0
+    uvy: 0,
+    r: 2.5
 };
 
 let npcs = [];
@@ -24,9 +25,13 @@ for(let j = 0; j < 51; j++){
         });
     }
 }
-window.GAME.updatePlayer = function updatePlayer({x, y}) {
-    player.x = x;
-    player.y = y;
+window.GAME.updatePlayer = function updatePlayer({x, y, r}) {
+    player = {
+        ...player,
+        x,
+        y,
+        r
+    }
 };
 
 let serverUpdate = 0;
@@ -42,6 +47,7 @@ window.GAME.updatePlayers = function updatePlayers({players, playerId}){
         if(found){
             found.x = player.x;
             found.y = player.y;
+            found.r = player.r;
             found.lastServerUpdate = serverUpdate;
         }else{
             window.GAME.players.push({
@@ -49,6 +55,7 @@ window.GAME.updatePlayers = function updatePlayers({players, playerId}){
                 y: player.y,
                 dx: -100,
                 dy: -100,
+                r: player.r,
                 lastServerUpdate: serverUpdate
             })
         }
@@ -136,7 +143,9 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                     }
             });
             window.GAME.players.forEach(player => {
-                drawGuy({x: player.dx, y: player.dy, r: 0, h: 0.05, w: 0.05});
+
+                drawGuy({x: player.dx, y: player.dy, r: 0, h: 0.05 * player.r / 2.5, w: 0.05 * player.r / 2.5});
+                console.log(player.r)
             })
                 // drawGuy({x: 0.888, y: 0.5, r: 0, h: 0.05, w: 0.05});
 
