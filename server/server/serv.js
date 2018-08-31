@@ -4,6 +4,7 @@ let findGForce = require('./physics/gravitationalForce');
 let boundaryClamp = require('./physics/boundaryClamp');
 let {findNewPos, findNewVel} = require('./physics/kinematics');
 let findGuideForce = require('./physics/guideForce');
+let collidedWith = require('./physics/collidedWith');
 
 const wss = new WebSocket.Server({ port: 8080 });
 
@@ -34,6 +35,11 @@ boundary = {
 }
 
 let id = 0;
+const MassToRad = 2;
+function getRad(mass){
+    return MassToRad * Math.pow(mass, 1/3);
+}
+
 wss.on('connection', function connection(ws) {
     function Client() {
         this.state = 'JOINED';
@@ -46,13 +52,14 @@ wss.on('connection', function connection(ws) {
         this.m = 2;
         this.fx = 0;
         this.fy = 0;
-        this.r = 2.5;
+        
+        this.r = getRad(this.m);
         this.id = id++;
-        this.guideStrength = 10000;
+        this.guideStrength = 50000;
+        this.isSwallowed = false;
 
         if(id % 2 === 0){
-            this.m = 8;
-            this.r = 5;
+            this.m = 2.1;
         }
 
         let messageListener = (message) => {
@@ -118,6 +125,20 @@ wss.on('connection', function connection(ws) {
             findNewVel(this, delta, ({vx, vy}) => {
                 this.vx = vx;
                 this.vy = vy;
+            });
+            blackholes.forEach(blackhole => {
+                if(this != blackhole){
+                        collidedWith(this, blackhole, ({collided}) => {
+                        if(collided){
+                            if(this.m > blackhole.m && !blackhole.isSwallowed){
+                                this.m += blackhole.m;
+                                this.r = getRad(this.m);
+                                console.log('GROW!');
+                                blackhole.isSwallowed = true;
+                            }
+                        }
+                    });
+                }
             });
         }
 
