@@ -1,6 +1,7 @@
 const WebSocket = require('ws');
 const now = require("performance-now")
 let findGForce = require('./physics/gravitationalForce');
+let boundaryClamp = require('./physics/boundaryClamp');
 let {findNewPos, findNewVel} = require('./physics/kinematics');
 let findGuideForce = require('./physics/guideForce');
 
@@ -26,6 +27,12 @@ const clampAdd = (val1, val2, max, min) => {
     return ret;
 }
 
+boundary = {
+    x: 500,
+    y: 500,
+    r: 500,
+}
+
 let id = 0;
 wss.on('connection', function connection(ws) {
     function Client() {
@@ -40,11 +47,9 @@ wss.on('connection', function connection(ws) {
         this.m = 1;
         this.fx = 0;
         this.fy = 0;
+        this.r = 4;
         this.id = id++;
         this.guideStrength = 10000;
-        if(id % 2 === 0){
-            this.m = 100;
-        }
 
         let messageListener = (message) => {
             try {
@@ -91,6 +96,15 @@ wss.on('connection', function connection(ws) {
                 sumfx += fx;
                 sumfy += fy;
             });
+            boundaryClamp(this, boundary, ({out, fux, fuy, force}) => {
+                if(out){
+                    console.log(fux, fuy)
+                    if (force > 1000)
+                    force = 1000
+                    sumfx += fux * this.m * force;
+                    sumfy += fuy * this.m * force;
+                }
+            })
             this.fx = sumfx;
             this.fy = sumfy;
             findNewPos(this, delta, ({x, y}) => {
