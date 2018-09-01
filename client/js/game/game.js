@@ -1,5 +1,12 @@
 window.GAME = {};
 
+const garguatiaConfig = {
+    x: 500,
+    y: 500,
+    m: 200,
+    r: 11.6960709
+}
+
 let player = {
     x: 0,
     y: 0,

@@ -1,5 +1,5 @@
 const G_CONST = 1000;
-const rexp = 1.1;
+const rexp = 2;
 
 function gravitationalForce(
     {

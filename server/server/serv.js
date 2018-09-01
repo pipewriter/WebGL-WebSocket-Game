@@ -27,10 +27,11 @@ function getRad(mass){
     return MassToRad * Math.pow(mass, 1/3);
 }
 
-
-const garguationConfig = {
+const garguatiaConfig = {
     x: 500,
     y: 500,
+    m: 200,
+    r: 11.6960709
 }
 
 function respawn(thing){
@@ -61,7 +62,7 @@ wss.on('connection', function connection(ws) {
         
         this.r = getRad(this.m);
         this.id = id++;
-        this.guideStrength = 50000;
+        this.guideStrength = 10000;
         this.isSwallowed = false;
 
         if(id % 2 === 0){
@@ -109,6 +110,10 @@ wss.on('connection', function connection(ws) {
                     });
                 }
             });
+            findGForce(this, garguatiaConfig, ({fx, fy}) => {
+                sumfx += fx;
+                sumfy += fy;
+            });
             findGuideForce(this, delta, ({fx, fy}) => {
                 sumfx += fx * 0.3;
                 sumfy += fy * 0.3;
@@ -144,6 +149,13 @@ wss.on('connection', function connection(ws) {
                             }
                         }
                     });
+                }
+            });
+            collidedWith(this, garguatiaConfig, ({collided}) => {
+                const blackhole = garguatiaConfig;
+                if(collided){
+                    console.log('gargantuad!');
+                    respawn(blackhole);
                 }
             });
         }
