@@ -5,16 +5,12 @@ function boundaryClamp(blackhole, boundary, callback){
         [x- bx, y- by];
     const mag = Math.sqrt(dx * dx + dy * dy);
     const ret = {out: false}
-    if(mag > br - r){
-        //get direction
-        //multiply by boundary.r
+    const distOut = mag - (br - r) //maybe not use r here????
+    if(distOut > 0){ 
         ret.out = true;
-        // ret.x = dx/mag * br + bx;
-        // ret.y = dy/mag * br + by;
         ret.fux = -dx/mag;
         ret.fuy = -dy/mag;
-        const f = mag + r - br
-        ret.force = f * f
+        ret.force = Math.pow(distOut, 2);
     }
     callback(ret);
 }
