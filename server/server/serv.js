@@ -5,28 +5,14 @@ let boundaryClamp = require('./physics/boundaryClamp');
 let {findNewPos, findNewVel} = require('./physics/kinematics');
 let findGuideForce = require('./physics/guideForce');
 let collidedWith = require('./physics/collidedWith');
+let spawnControl = require('./physics/spawnControl');
 
 const wss = new WebSocket.Server({ port: 8080 });
 
 let clients = [];
 
-const MIN_X = 0;
-const MIN_Y = 0;
-const MAX_X = 1000;
-const MAX_Y = 1000;
 const INIT_X = 500;
 const INIT_Y = 500;
-
-const clampAdd = (val1, val2, max, min) => {
-    let ret = val1 + val2;
-    if (max < ret) {
-        return max;
-    }
-    if (min > ret) {
-        return min;
-    }
-    return ret;
-}
 
 boundary = {
     x: 500,
@@ -34,10 +20,28 @@ boundary = {
     r: 500,
 }
 
+
 let id = 0;
 const MassToRad = 2;
 function getRad(mass){
     return MassToRad * Math.pow(mass, 1/3);
+}
+
+
+const garguationConfig = {
+    x: 500,
+    y: 500,
+}
+
+function respawn(thing){
+    spawnControl.getSpawn(({x, y}) => {
+        thing.x = x;
+        thing.y = y;
+        thing.fx = 0;
+        thing.fy = 0;
+        thing.vx = 0;
+        thing.vy = 0;
+    });
 }
 
 wss.on('connection', function connection(ws) {
@@ -45,8 +49,10 @@ wss.on('connection', function connection(ws) {
         this.state = 'JOINED';
         this.uvx = 0;
         this.uvy = 0;
-        this.x = INIT_X;
-        this.y = INIT_Y;
+        spawnControl.getSpawn(({x, y}) => {
+            this.x = x;
+            this.y = y;
+        })
         this.vx = 0;
         this.vy = 0;
         this.m = 2;
@@ -109,7 +115,6 @@ wss.on('connection', function connection(ws) {
             });
             boundaryClamp(this, boundary, ({out, fux, fuy, force}) => {
                 if(out){
-                    console.log(fux, fuy)
                     if (force > 1000)
                     force = 1000
                     sumfx += fux * this.m * force;
@@ -134,7 +139,8 @@ wss.on('connection', function connection(ws) {
                                 this.m += blackhole.m;
                                 this.r = getRad(this.m);
                                 console.log('GROW!');
-                                blackhole.isSwallowed = true;
+                                // blackhole.isSwallowed = true;
+                                respawn(blackhole);
                             }
                         }
                     });
