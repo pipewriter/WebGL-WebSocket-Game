@@ -11,10 +11,14 @@
 
     // Listen for messages
     socket.addEventListener('message', function (event) {
-        // console.log('Message from server ', event.data);
         const data = JSON.parse(event.data);
-        // console.log(data.players[0].x)
-        window.GAME.updatePlayers(data);
+        if(data.type === 0){
+            window.GAME.setInitialConstants(data);
+        }else if(data.type === 1){
+            window.GAME.updatePlayers(data);
+        }else{
+            throw new Error('unrecognized data type')
+        }
     });
 
     function send1(){
@@ -30,10 +34,8 @@
         lastX = uvx;
         lastY = uvy;
         if(window.canvas.getMouseDown()){
-            console.log('mouse down');
             socket.send(JSON.stringify({uvx, uvy}));
         }else{
-            console.log('mouse up');
             socket.send(JSON.stringify({uvx: 0, uvy: 0}))
         }
     }, 17)

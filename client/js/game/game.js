@@ -32,6 +32,16 @@ for(let j = 0; j < 51; j++){
         });
     }
 }
+
+window.GAME.setInitialConstants = function setInitialConstants(
+    {
+        gargantua
+    }
+){
+    window.GAME.gargantua = gargantua;
+    console.log('GOT EM', gargantua);
+};
+
 window.GAME.updatePlayer = function updatePlayer({x, y, r}) {
     player = {
         ...player,
@@ -94,28 +104,60 @@ window.GAME.getPlayerDirection = function getPlayerDirection(){
         uvy: player.uvy
     }
 };
+// window.GAME.adjustDrawCoords = function adjustDrawCoords(){
+//     const xDiff = player.x;
+//     const yDiff = player.y;
+//     let mainPlayer = player;
+//     npcs.forEach(npc => {
+//         npc.dx = (npc.x - xDiff)/100 + player.dx;
+//         npc.dy = (npc.y - yDiff)/100 + player.dy;
+//         // npc.dy = (npc.y - yDiff)/100;
+//         // npc.dx = 0.5;
+//         // npc.dy = 0.5;
+//     });
+//     window.GAME.players.forEach(player => {
+//         player.dx = (player.x - xDiff)/100 + mainPlayer.dx;
+//         player.dy = (player.y - yDiff)/100 + mainPlayer.dy;
+//     })
+// };
+function calcNewCoords ({x:nx, y:ny}, {x:px, dx, y:py, dy}, callback){
+    const xDiff = px;
+    const yDiff = py;
+    x = (nx - xDiff)/100 + dx;
+    y = (ny - yDiff)/100 + dy;
+    callback({x, y});
+}
 
 window.GAME.adjustDrawCoords = function adjustDrawCoords(){
-    const xDiff = player.x;
-    const yDiff = player.y;
-    let mainPlayer = player;
+    
+    const mainPlayer = player;
     npcs.forEach(npc => {
-        npc.dx = (npc.x - xDiff)/100 + player.dx;
-        npc.dy = (npc.y - yDiff)/100 + player.dy;
-        // npc.dy = (npc.y - yDiff)/100;
-        // npc.dx = 0.5;
-        // npc.dy = 0.5;
+        calcNewCoords(npc, mainPlayer, ({x, y}) =>  {
+            // npc = {...npc, dx:x, dy:y};
+            npc.dx = x;
+            npc.dy = y;
+        })
     });
     window.GAME.players.forEach(player => {
-        player.dx = (player.x - xDiff)/100 + mainPlayer.dx;
-        player.dy = (player.y - yDiff)/100 + mainPlayer.dy;
+        calcNewCoords(player, mainPlayer, ({x, y}) => {
+            player.dx = x;
+            player.dy = y;
+        })
     })
+    if(window.GAME.gargantua) {
+        const {gargantua} = window.GAME;
+        calcNewCoords(gargantua, player, ({x, y}) => {
+            gargantua.dx = x;
+            gargantua.dy = y;
+        });
+    }
 };
 
 (async () => {
 
     const drawGuy = await window.drawpic.init("./assets/images/blackhole.png");
     const d4 = await window.drawpic.init("./assets/images/starryspace.png");
+    const drawGargantua = await window.drawpic.init('./assets/images/supermassive.png');
     const d5 = await window.drawpic.init("./assets/images/dino.png");
     const d6 = await window.drawpic.init("./assets/images/mick.png");
     const d7 = await window.drawpic.init("./assets/images/satu.png");
@@ -149,13 +191,16 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
 
                     }
             });
+            if(window.GAME.gargantua){
+                const {gargantua} = window.GAME;
+                drawGargantua({x: gargantua.dx, y: gargantua.dy, r: 0, h: 0.05 * 2 * gargantua.r / 2.5,
+                    w: 0.05 * 2 * gargantua.r / 2.5});
+            }
             window.GAME.players.forEach(player => {
 
                 drawGuy({x: player.dx, y: player.dy, r: 0, h: 0.05 * player.r / 2.5, w: 0.05 * player.r / 2.5});
-                console.log(player.r)
             })
                 // drawGuy({x: 0.888, y: 0.5, r: 0, h: 0.05, w: 0.05});
-
             // d4({x: (mp.x*16/9) +0.02, y: (mp.y)+0.02,r, h: 0.04, w: 0.04})
             window.requestAnimationFrame(step);
         }

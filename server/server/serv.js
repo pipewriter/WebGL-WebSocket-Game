@@ -80,6 +80,8 @@ wss.on('connection', function connection(ws) {
                         this.name = 'unnamed horse';
                     }
 
+                    this.sendMessage(JSON.stringify({type: 0, gargantua: garguatiaConfig}));
+
                     this.state = 'PLAYING';
                 } else {
                     let uvx = new Number(playerData.uvx);
@@ -155,7 +157,7 @@ wss.on('connection', function connection(ws) {
                 const blackhole = garguatiaConfig;
                 if(collided){
                     console.log('gargantuad!');
-                    respawn(blackhole);
+                    respawn(this);
                 }
             });
         }
@@ -239,6 +241,7 @@ Array.prototype.forEachPlaying = (func) => {
             client.update(delta, clients);
         });
         let dataObj = {
+            type: 1,
             players: []
         };
         clients.forEachPlaying(client => {
