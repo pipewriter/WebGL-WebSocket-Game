@@ -37,11 +37,13 @@ for(let j = 0; j < 51; j++){
 
 window.GAME.setInitialConstants = function setInitialConstants(
     {
-        gargantua
+        gargantua,
+        playerId
     }
 ){
     window.GAME.gargantua = gargantua;
-    console.log('GOT EM', gargantua);
+    window.GAME.playerId = playerId;
+    console.log('GOT EM', gargantua, playerId);
 };
 
 window.GAME.updatePlayer = function updatePlayer({x, y, r}) {
@@ -53,11 +55,10 @@ window.GAME.updatePlayer = function updatePlayer({x, y, r}) {
     }
 };
 
-
 let serverUpdate = 0;
-window.GAME.updatePlayers = function updatePlayers({players, playerId}){
+window.GAME.updatePlayers = function updatePlayers({players}){
     let main = players.find(element => {
-        return element.id === playerId
+        return element.id === window.GAME.playerId
     });
     window.GAME.updatePlayer(main);
     players.forEach(player => {
@@ -93,11 +94,6 @@ window.GAME.updatePlayers = function updatePlayers({players, playerId}){
 window.GAME.updatePlanets = function updatePlanets({planets}){
     window.GAME.planets = planets;
 }
-
-window.GAME.updateGame = function updateGame(data){
-    window.GAME.updatePlayers(data);
-    window.GAME.updatePlanets(data);
-};
 
 window.GAME.updateDirection = function updateDirection({mp}){
     let [x, y] = [mp.x - 0.5, mp.y - 0.5];

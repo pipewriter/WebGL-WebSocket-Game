@@ -21,6 +21,12 @@ boundary = {
     r: 500,
 }
 
+planetBoundary = {
+    x: 500,
+    y: 500,
+    r: 600,
+}
+
 
 let id = 0;
 const MassToRad = 2;
@@ -28,33 +34,9 @@ function getRad(mass){
     return MassToRad * Math.pow(mass, 1/3);
 }
 
+planets = [];
 
-planets = [
-    {
-        type: 0,
-        x: 800,
-        y: 500,
-        m: 2,
-        r: getRad(2),
-        vx: 0,
-        vy: 0,
-        fx: 0,
-        fy: 0
-    },
-    {
-        type: 1,
-        x: 850,
-        y: 500,
-        m: 3,
-        r: getRad(3),
-        vx: 0,
-        vy: 0,
-        fx: 0,
-        fy: 0
-    }
-] 
-
-for(let i = 0; i < 100; i++){
+for(let i = 0; i < 200; i++){
     let m = Math.random() * 2.5 + 0.5 
     planets.push({
         type: Math.floor(Math.random() * 8),
@@ -77,6 +59,10 @@ const gargantuaConfig = {
 }
 
 function respawn(thing){
+    if(thing.im){
+        thing.m = thing.im;
+        thing.r = getRad(thing.m);
+    }
     spawnControl.getSpawn(({x, y}) => {
         thing.x = x;
         thing.y = y;
@@ -111,8 +97,9 @@ wss.on('connection', function connection(ws) {
         this.guideStrength = 100;
         this.isSwallowed = false;
 
-        (function addMinuteDifference(){
+        (() => {
             this.m += Math.random() /1000;
+            this.im = this.m;
         })();
         respawn(this);
 
@@ -127,7 +114,13 @@ wss.on('connection', function connection(ws) {
                         this.name = 'unnamed horse';
                     }
 
-                    this.sendMessage(JSON.stringify({type: 0, gargantua: gargantuaConfig}));
+                    this.sendMessage(JSON.stringify(
+                        {
+                            type: 0,
+                            gargantua: gargantuaConfig,
+                            playerId: this.id
+                        }
+                    ));
 
                     this.state = 'PLAYING';
                 } else {
@@ -300,15 +293,16 @@ Array.prototype.forEachPlaying = (func) => {
             (function planetUpdate(){
                 let sumfx = 0;
                 let sumfy = 0;
-                collidedWith(planet, gargantuaConfig, ({collided}) => {
-                    if(collided){
-                        respawn(planet);
-                    }
-                });
                 findGForce(planet, gargantuaConfig, ({fx, fy}) => {
                     sumfx += fx;
                     sumfy += fy;
                 });
+                clients.forEach(blackhole => {
+                    findGForce(planet, blackhole, ({fx, fy}) => {
+                        sumfx += fx;
+                        sumfy += fy;
+                    });
+                })
                 planet.fx = sumfx;
                 planet.fy = sumfy;
                 findNewPos(planet, delta, ({x, y}) => {
@@ -319,26 +313,31 @@ Array.prototype.forEachPlaying = (func) => {
                     planet.vx = vx;
                     planet.vy = vy;
                 });
+                collidedWith(planet, gargantuaConfig, ({collided}) => {
+                    if(collided){
+                        respawn(planet);
+                    }
+                });
+                boundaryClamp(planet, planetBoundary, ({out, fux, fuy, force}) => {
+                    if(out){
+                        respawn(planet);
+                    }
+                })
             })();
         });
-        let dataObj = {
+        let gameData = JSON.stringify({
             type: 1,
-            players: [],
-            planets
-        };
+            planets,
+            players: clients.map(client => ({
+                x: client.x,
+                y: client.y,
+                name: client.name,
+                id: client.id,
+                r: client.r
+            })) 
+        })
         clients.forEachPlaying(client => {
-            const {x, y, name, id, r} = client;
-            dataObj.players.push({
-                x,
-                y,
-                name,
-                id,
-                r
-            })
-        });
-        clients.forEachPlaying(client => {
-            dataObj.playerId = client.id;
-            client.sendMessage(JSON.stringify(dataObj));
+            client.sendMessage(gameData);
         })
     }
 })();
