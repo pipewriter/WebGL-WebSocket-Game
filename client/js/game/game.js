@@ -153,7 +153,6 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             planet.dx = x;
             planet.dy = y;
         });
-        console.log(planet)
     })
 };
 

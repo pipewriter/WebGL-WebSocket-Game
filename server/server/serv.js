@@ -53,7 +53,22 @@ planets = [
     }
 ] 
 
-const garguatiaConfig = {
+for(let i = 0; i < 100; i++){
+    let m = Math.random() * 2.5 + 0.5 
+    planets.push({
+        type: Math.floor(Math.random() * 8),
+        x: 500,
+        y: 500,
+        m,
+        r: getRad(m),
+        vx: 0,
+        vy: 0,
+        fx: 0,
+        fy: 0
+    });
+}
+
+const gargantuaConfig = {
     x: 500,
     y: 500,
     m: 200,
@@ -106,7 +121,7 @@ wss.on('connection', function connection(ws) {
                         this.name = 'unnamed horse';
                     }
 
-                    this.sendMessage(JSON.stringify({type: 0, gargantua: garguatiaConfig}));
+                    this.sendMessage(JSON.stringify({type: 0, gargantua: gargantuaConfig}));
 
                     this.state = 'PLAYING';
                 } else {
@@ -138,7 +153,7 @@ wss.on('connection', function connection(ws) {
                     });
                 }
             });
-            findGForce(this, garguatiaConfig, ({fx, fy}) => {
+            findGForce(this, gargantuaConfig, ({fx, fy}) => {
                 sumfx += fx;
                 sumfy += fy;
             });
@@ -188,8 +203,8 @@ wss.on('connection', function connection(ws) {
                     }
                 })
             });
-            collidedWith(this, garguatiaConfig, ({collided}) => {
-                const blackhole = garguatiaConfig;
+            collidedWith(this, gargantuaConfig, ({collided}) => {
+                const blackhole = gargantuaConfig;
                 if(collided){
                     console.log('gargantuad!');
                     respawn(this);
@@ -275,6 +290,13 @@ Array.prototype.forEachPlaying = (func) => {
         clients.forEachPlaying(client => {
             client.update(delta, clients);
         });
+        planets.forEach(planet => {
+            collidedWith(planet, gargantuaConfig, ({collided}) => {
+                if(collided){
+                    respawn(planet);
+                }
+            })
+        })
         let dataObj = {
             type: 1,
             players: [],
