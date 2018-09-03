@@ -21,13 +21,18 @@ boundary = {
     r: 500,
 }
 
+planetBoundary = {
+    x: 500,
+    y: 500,
+    r: 600,
+}
+
 
 let id = 0;
 const MassToRad = 2;
 function getRad(mass){
     return MassToRad * Math.pow(mass, 1/3);
 }
-
 
 planets = [];
 
@@ -56,7 +61,7 @@ const gargantuaConfig = {
 function respawn(thing){
     if(thing.im){
         thing.m = thing.im;
-        this.r = getRad(this.m);
+        thing.r = getRad(thing.m);
     }
     spawnControl.getSpawn(({x, y}) => {
         thing.x = x;
@@ -92,9 +97,9 @@ wss.on('connection', function connection(ws) {
         this.guideStrength = 100;
         this.isSwallowed = false;
 
-        (function addMinuteDifference(){
+        (() => {
             this.m += Math.random() /1000;
-            this.im = m;
+            this.im = this.m;
         })();
         respawn(this);
 
@@ -288,15 +293,16 @@ Array.prototype.forEachPlaying = (func) => {
             (function planetUpdate(){
                 let sumfx = 0;
                 let sumfy = 0;
-                collidedWith(planet, gargantuaConfig, ({collided}) => {
-                    if(collided){
-                        respawn(planet);
-                    }
-                });
                 findGForce(planet, gargantuaConfig, ({fx, fy}) => {
                     sumfx += fx;
                     sumfy += fy;
                 });
+                clients.forEach(blackhole => {
+                    findGForce(planet, blackhole, ({fx, fy}) => {
+                        sumfx += fx;
+                        sumfy += fy;
+                    });
+                })
                 planet.fx = sumfx;
                 planet.fy = sumfy;
                 findNewPos(planet, delta, ({x, y}) => {
@@ -307,6 +313,16 @@ Array.prototype.forEachPlaying = (func) => {
                     planet.vx = vx;
                     planet.vy = vy;
                 });
+                collidedWith(planet, gargantuaConfig, ({collided}) => {
+                    if(collided){
+                        respawn(planet);
+                    }
+                });
+                boundaryClamp(planet, planetBoundary, ({out, fux, fuy, force}) => {
+                    if(out){
+                        respawn(planet);
+                    }
+                })
             })();
         });
         let gameData = JSON.stringify({
