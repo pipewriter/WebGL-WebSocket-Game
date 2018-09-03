@@ -5,28 +5,15 @@ let boundaryClamp = require('./physics/boundaryClamp');
 let {findNewPos, findNewVel} = require('./physics/kinematics');
 let findGuideForce = require('./physics/guideForce');
 let collidedWith = require('./physics/collidedWith');
+let spawnControl = require('./physics/spawnControl');
+let orbitalVelocity = require('./physics/orbitalVelocity');
 
 const wss = new WebSocket.Server({ port: 8080 });
 
 let clients = [];
 
-const MIN_X = 0;
-const MIN_Y = 0;
-const MAX_X = 1000;
-const MAX_Y = 1000;
 const INIT_X = 500;
 const INIT_Y = 500;
-
-const clampAdd = (val1, val2, max, min) => {
-    let ret = val1 + val2;
-    if (max < ret) {
-        return max;
-    }
-    if (min > ret) {
-        return min;
-    }
-    return ret;
-}
 
 boundary = {
     x: 500,
@@ -34,10 +21,74 @@ boundary = {
     r: 500,
 }
 
+
 let id = 0;
 const MassToRad = 2;
 function getRad(mass){
     return MassToRad * Math.pow(mass, 1/3);
+}
+
+
+planets = [
+    {
+        type: 0,
+        x: 800,
+        y: 500,
+        m: 2,
+        r: getRad(2),
+        vx: 0,
+        vy: 0,
+        fx: 0,
+        fy: 0
+    },
+    {
+        type: 1,
+        x: 850,
+        y: 500,
+        m: 3,
+        r: getRad(3),
+        vx: 0,
+        vy: 0,
+        fx: 0,
+        fy: 0
+    }
+] 
+
+for(let i = 0; i < 500; i++){
+    let m = Math.random() * 2.5 + 0.5 
+    planets.push({
+        type: Math.floor(Math.random() * 8),
+        x: 500,
+        y: 500,
+        m,
+        r: getRad(m),
+        vx: 0,
+        vy: 0,
+        fx: 0,
+        fy: 0
+    });
+}
+
+const gargantuaConfig = {
+    x: 500,
+    y: 500,
+    m: 200,
+    r: 11.6960709
+}
+
+function respawn(thing){
+    spawnControl.getSpawn(({x, y}) => {
+        thing.x = x;
+        thing.y = y;
+        thing.fx = 0;
+        thing.fy = 0;
+        thing.vx = 0;
+        thing.vy = 0;
+    });
+    orbitalVelocity(thing, gargantuaConfig, 1000, ({vx, vy}) => {
+        thing.vx = vx;
+        thing.vy = vy;
+    })
 }
 
 wss.on('connection', function connection(ws) {
@@ -45,22 +96,25 @@ wss.on('connection', function connection(ws) {
         this.state = 'JOINED';
         this.uvx = 0;
         this.uvy = 0;
-        this.x = INIT_X;
-        this.y = INIT_Y;
+        spawnControl.getSpawn(({x, y}) => {
+            this.x = x;
+            this.y = y;
+        })
         this.vx = 0;
         this.vy = 0;
-        this.m = 2;
+        this.m = 4;
         this.fx = 0;
         this.fy = 0;
         
         this.r = getRad(this.m);
         this.id = id++;
-        this.guideStrength = 50000;
+        this.guideStrength = 100;
         this.isSwallowed = false;
 
-        if(id % 2 === 0){
-            this.m = 2.1;
-        }
+        (function addMinuteDifference(){
+            this.m += Math.random() /1000;
+        })();
+        respawn(this);
 
         let messageListener = (message) => {
             try {
@@ -72,6 +126,8 @@ wss.on('connection', function connection(ws) {
                     } else {
                         this.name = 'unnamed horse';
                     }
+
+                    this.sendMessage(JSON.stringify({type: 0, gargantua: gargantuaConfig}));
 
                     this.state = 'PLAYING';
                 } else {
@@ -103,13 +159,16 @@ wss.on('connection', function connection(ws) {
                     });
                 }
             });
+            findGForce(this, gargantuaConfig, ({fx, fy}) => {
+                sumfx += fx;
+                sumfy += fy;
+            });
             findGuideForce(this, delta, ({fx, fy}) => {
-                sumfx += fx * 0.3;
-                sumfy += fy * 0.3;
+                sumfx += fx * 0.3 * this.m;
+                sumfy += fy * 0.3 * this.m;
             });
             boundaryClamp(this, boundary, ({out, fux, fuy, force}) => {
                 if(out){
-                    console.log(fux, fuy)
                     if (force > 1000)
                     force = 1000
                     sumfx += fux * this.m * force;
@@ -134,10 +193,27 @@ wss.on('connection', function connection(ws) {
                                 this.m += blackhole.m;
                                 this.r = getRad(this.m);
                                 console.log('GROW!');
-                                blackhole.isSwallowed = true;
+                                // blackhole.isSwallowed = true;
+                                respawn(blackhole);
                             }
                         }
                     });
+                }
+            });
+            planets.forEach(planet => {
+                collidedWith(this, planet, ({collided}) => {
+                    if(collided){
+                        this.m += planet.m;
+                        this.r = getRad(this.m);
+                        respawn(planet);
+                    }
+                })
+            });
+            collidedWith(this, gargantuaConfig, ({collided}) => {
+                const blackhole = gargantuaConfig;
+                if(collided){
+                    console.log('gargantuad!');
+                    respawn(this);
                 }
             });
         }
@@ -220,8 +296,35 @@ Array.prototype.forEachPlaying = (func) => {
         clients.forEachPlaying(client => {
             client.update(delta, clients);
         });
+        planets.forEach(planet => {
+            (function planetUpdate(){
+                let sumfx = 0;
+                let sumfy = 0;
+                collidedWith(planet, gargantuaConfig, ({collided}) => {
+                    if(collided){
+                        respawn(planet);
+                    }
+                });
+                findGForce(planet, gargantuaConfig, ({fx, fy}) => {
+                    sumfx += fx;
+                    sumfy += fy;
+                });
+                planet.fx = sumfx;
+                planet.fy = sumfy;
+                findNewPos(planet, delta, ({x, y}) => {
+                    planet.x = x;
+                    planet.y = y;
+                });
+                findNewVel(planet, delta, ({vx, vy}) => {
+                    planet.vx = vx;
+                    planet.vy = vy;
+                });
+            })();
+        });
         let dataObj = {
-            players: []
+            type: 1,
+            players: [],
+            planets
         };
         clients.forEachPlaying(client => {
             const {x, y, name, id, r} = client;
