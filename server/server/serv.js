@@ -54,7 +54,7 @@ planets = [
     }
 ] 
 
-for(let i = 0; i < 500; i++){
+for(let i = 0; i < 100; i++){
     let m = Math.random() * 2.5 + 0.5 
     planets.push({
         type: Math.floor(Math.random() * 8),
