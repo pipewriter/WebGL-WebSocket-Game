@@ -27,6 +27,32 @@ function getRad(mass){
     return MassToRad * Math.pow(mass, 1/3);
 }
 
+
+planets = [
+    {
+        type: 0,
+        x: 800,
+        y: 500,
+        m: 2,
+        r: getRad(2),
+        vx: 0,
+        vy: 0,
+        fx: 0,
+        fy: 0
+    },
+    {
+        type: 1,
+        x: 850,
+        y: 500,
+        m: 3,
+        r: getRad(3),
+        vx: 0,
+        vy: 0,
+        fx: 0,
+        fy: 0
+    }
+] 
+
 const garguatiaConfig = {
     x: 500,
     y: 500,
@@ -56,7 +82,7 @@ wss.on('connection', function connection(ws) {
         })
         this.vx = 0;
         this.vy = 0;
-        this.m = 2;
+        this.m = 4;
         this.fx = 0;
         this.fy = 0;
         
@@ -153,6 +179,15 @@ wss.on('connection', function connection(ws) {
                     });
                 }
             });
+            planets.forEach(planet => {
+                collidedWith(this, planet, ({collided}) => {
+                    if(collided){
+                        this.m += planet.m;
+                        this.r = getRad(this.m);
+                        respawn(planet);
+                    }
+                })
+            });
             collidedWith(this, garguatiaConfig, ({collided}) => {
                 const blackhole = garguatiaConfig;
                 if(collided){
@@ -242,7 +277,8 @@ Array.prototype.forEachPlaying = (func) => {
         });
         let dataObj = {
             type: 1,
-            players: []
+            players: [],
+            planets
         };
         clients.forEachPlaying(client => {
             const {x, y, name, id, r} = client;

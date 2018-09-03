@@ -21,6 +21,8 @@ let npcs = [];
 
 window.GAME.players = [];
 
+window.GAME.planets = [];
+
 for(let j = 0; j < 51; j++){
     for(let i = 0; i < 51; i++){
         npcs.push({
@@ -50,6 +52,7 @@ window.GAME.updatePlayer = function updatePlayer({x, y, r}) {
         r
     }
 };
+
 
 let serverUpdate = 0;
 window.GAME.updatePlayers = function updatePlayers({players, playerId}){
@@ -87,6 +90,15 @@ window.GAME.updatePlayers = function updatePlayers({players, playerId}){
     serverUpdate++;
 }
 
+window.GAME.updatePlanets = function updatePlanets({planets}){
+    window.GAME.planets = planets;
+}
+
+window.GAME.updateGame = function updateGame(data){
+    window.GAME.updatePlayers(data);
+    window.GAME.updatePlanets(data);
+};
+
 window.GAME.updateDirection = function updateDirection({mp}){
     let [x, y] = [mp.x - 0.5, mp.y - 0.5];
     let mag = Math.sqrt(x * x + y * y); 
@@ -104,22 +116,7 @@ window.GAME.getPlayerDirection = function getPlayerDirection(){
         uvy: player.uvy
     }
 };
-// window.GAME.adjustDrawCoords = function adjustDrawCoords(){
-//     const xDiff = player.x;
-//     const yDiff = player.y;
-//     let mainPlayer = player;
-//     npcs.forEach(npc => {
-//         npc.dx = (npc.x - xDiff)/100 + player.dx;
-//         npc.dy = (npc.y - yDiff)/100 + player.dy;
-//         // npc.dy = (npc.y - yDiff)/100;
-//         // npc.dx = 0.5;
-//         // npc.dy = 0.5;
-//     });
-//     window.GAME.players.forEach(player => {
-//         player.dx = (player.x - xDiff)/100 + mainPlayer.dx;
-//         player.dy = (player.y - yDiff)/100 + mainPlayer.dy;
-//     })
-// };
+
 function calcNewCoords ({x:nx, y:ny}, {x:px, dx, y:py, dy}, callback){
     const xDiff = px;
     const yDiff = py;
@@ -151,16 +148,31 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             gargantua.dy = y;
         });
     }
+    window.GAME.planets.forEach(planet => {
+        calcNewCoords(planet, mainPlayer, ({x, y}) => {
+            planet.dx = x;
+            planet.dy = y;
+        });
+        console.log(planet)
+    })
 };
 
 (async () => {
 
     const drawGuy = await window.drawpic.init("./assets/images/blackhole.png");
-    const d4 = await window.drawpic.init("./assets/images/starryspace.png");
+    const drawbg = await window.drawpic.init("./assets/images/starryspace.png");
     const drawGargantua = await window.drawpic.init('./assets/images/supermassive.png');
-    const d5 = await window.drawpic.init("./assets/images/dino.png");
-    const d6 = await window.drawpic.init("./assets/images/mick.png");
-    const d7 = await window.drawpic.init("./assets/images/satu.png");
+
+    const drawPlanets = [
+        await window.drawpic.init('./assets/images/planets/Planet1.png'),
+        await window.drawpic.init('./assets/images/planets/Planet2.png'),
+        await window.drawpic.init('./assets/images/planets/Planet3.png'),
+        await window.drawpic.init('./assets/images/planets/Planet4.png'),
+        await window.drawpic.init('./assets/images/planets/Planet5.png'),
+        await window.drawpic.init('./assets/images/planets/Planet6.png'),
+        await window.drawpic.init('./assets/images/planets/Planet7.png'),
+        await window.drawpic.init('./assets/images/planets/Planet8.png')
+    ]
 
 
     function repeatRender(){
@@ -173,35 +185,36 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             let mp = window.canvas.getMousePos();
 
             window.GAME.updateDirection({mp});
-            // d4({x: (mp.x*16/9) +0.02, y: (mp.y)+0.02,r, h: 0.04, w: 0.04})
-            // {
-            //     let npc = npcs[0];
-            //     d4({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2})
-            //     // console.log(npc)
-            // }
+
             npcs.forEach(npc => {
                 if(npc.dx+0.2 > 0 && npc.dx < 2.0
                     && npc.dy + 0.2 > 0 && npc.dy < 1.2){
-                        switch(npc.t){
-                            case 0: d4({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});break;
-                            case 1: d5({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});break;
-                            case 2: d6({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});break;
-                            case 3: d7({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});break;
-                        }
-
+                        drawbg({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});
                     }
             });
+
             if(window.GAME.gargantua){
                 const {gargantua} = window.GAME;
                 drawGargantua({x: gargantua.dx, y: gargantua.dy, r: 0, h: 0.05 * 2 * gargantua.r / 2.5,
                     w: 0.05 * 2 * gargantua.r / 2.5});
             }
-            window.GAME.players.forEach(player => {
 
+            window.GAME.planets.forEach(planet => {
+                drawPlanets[planet.type](
+                    {
+                        x: planet.dx,
+                        y: planet.dy,
+                        r: 0,
+                        h: 0.05 * planet.r / 2.5,
+                        w: 0.05 * planet.r / 2.5
+                    }
+                )
+            });
+            
+            window.GAME.players.forEach(player => {
                 drawGuy({x: player.dx, y: player.dy, r: 0, h: 0.05 * player.r / 2.5, w: 0.05 * player.r / 2.5});
-            })
-                // drawGuy({x: 0.888, y: 0.5, r: 0, h: 0.05, w: 0.05});
-            // d4({x: (mp.x*16/9) +0.02, y: (mp.y)+0.02,r, h: 0.04, w: 0.04})
+            });
+            
             window.requestAnimationFrame(step);
         }
         window.requestAnimationFrame(step);
