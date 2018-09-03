@@ -291,12 +291,30 @@ Array.prototype.forEachPlaying = (func) => {
             client.update(delta, clients);
         });
         planets.forEach(planet => {
-            collidedWith(planet, gargantuaConfig, ({collided}) => {
-                if(collided){
-                    respawn(planet);
-                }
-            })
-        })
+            (function planetUpdate(){
+                let sumfx = 0;
+                let sumfy = 0;
+                collidedWith(planet, gargantuaConfig, ({collided}) => {
+                    if(collided){
+                        respawn(planet);
+                    }
+                });
+                findGForce(planet, gargantuaConfig, ({fx, fy}) => {
+                    sumfx += fx;
+                    sumfy += fy;
+                });
+                planet.fx = sumfx;
+                planet.fy = sumfy;
+                findNewPos(planet, delta, ({x, y}) => {
+                    planet.x = x;
+                    planet.y = y;
+                });
+                findNewVel(planet, delta, ({vx, vy}) => {
+                    planet.vx = vx;
+                    planet.vy = vy;
+                });
+            })();
+        });
         let dataObj = {
             type: 1,
             players: [],
