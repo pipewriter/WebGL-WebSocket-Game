@@ -169,7 +169,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
         await window.drawpic.init('./assets/images/planets/Planet8.png')
     ]
 
-    const drawCircle = await window.drawCircle.init();
+    const drawCircle = await window.drawCircle.init({x: 500, y: 500, r: 500});
 
     function repeatRender(){
         function step(timestamp) {
@@ -189,7 +189,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                     }
             });
 
-            drawCircle({x: 0, y: 0, r: 0})
+            drawCircle({x: player.x, y: player.y})
 
             if(window.GAME.gargantua){
                 const {gargantua} = window.GAME;
