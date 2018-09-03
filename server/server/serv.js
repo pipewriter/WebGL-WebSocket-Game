@@ -6,6 +6,7 @@ let {findNewPos, findNewVel} = require('./physics/kinematics');
 let findGuideForce = require('./physics/guideForce');
 let collidedWith = require('./physics/collidedWith');
 let spawnControl = require('./physics/spawnControl');
+let orbitalVelocity = require('./physics/orbitalVelocity');
 
 const wss = new WebSocket.Server({ port: 8080 });
 
@@ -53,7 +54,7 @@ planets = [
     }
 ] 
 
-for(let i = 0; i < 100; i++){
+for(let i = 0; i < 500; i++){
     let m = Math.random() * 2.5 + 0.5 
     planets.push({
         type: Math.floor(Math.random() * 8),
@@ -84,6 +85,10 @@ function respawn(thing){
         thing.vx = 0;
         thing.vy = 0;
     });
+    orbitalVelocity(thing, gargantuaConfig, 1000, ({vx, vy}) => {
+        thing.vx = vx;
+        thing.vy = vy;
+    })
 }
 
 wss.on('connection', function connection(ws) {
@@ -106,9 +111,10 @@ wss.on('connection', function connection(ws) {
         this.guideStrength = 100;
         this.isSwallowed = false;
 
-        if(id % 2 === 0){
-            this.m = 2.1;
-        }
+        (function addMinuteDifference(){
+            this.m += Math.random() /1000;
+        })();
+        respawn(this);
 
         let messageListener = (message) => {
             try {

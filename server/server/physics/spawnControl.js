@@ -1,7 +1,7 @@
 spawningConfig = {
     cx: 500,
     cy: 500,
-    r1: 200,
+    r1: 20,
     r2: 500
 }
 
