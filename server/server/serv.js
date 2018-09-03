@@ -103,7 +103,7 @@ wss.on('connection', function connection(ws) {
         
         this.r = getRad(this.m);
         this.id = id++;
-        this.guideStrength = 10000;
+        this.guideStrength = 100;
         this.isSwallowed = false;
 
         if(id % 2 === 0){
@@ -158,8 +158,8 @@ wss.on('connection', function connection(ws) {
                 sumfy += fy;
             });
             findGuideForce(this, delta, ({fx, fy}) => {
-                sumfx += fx * 0.3;
-                sumfy += fy * 0.3;
+                sumfx += fx * 0.3 * this.m;
+                sumfy += fy * 0.3 * this.m;
             });
             boundaryClamp(this, boundary, ({out, fux, fuy, force}) => {
                 if(out){
