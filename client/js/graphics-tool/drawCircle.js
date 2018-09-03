@@ -1,8 +1,7 @@
 window.drawCircle = {};
 
 (() => {
-
-    window.drawpic.init = function (){
+    window.drawCircle.init = async function (){
         const circleConfig = {
             vertFile: "./assets/shaders/circleVert.glsl",
             fragFile: "./assets/shaders/circleFrag.glsl",
@@ -13,7 +12,7 @@ window.drawCircle = {};
                 }
             ]
         }
-        let cir = initializeFromConfig(circleConfig);
+        let cir = await initializeFromConfig(circleConfig);
         return function draw({x, y, r}){
             const vd = [
                 -1,  1, 0.9,
