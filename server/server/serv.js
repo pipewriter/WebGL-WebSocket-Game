@@ -29,30 +29,7 @@ function getRad(mass){
 }
 
 
-planets = [
-    {
-        type: 0,
-        x: 800,
-        y: 500,
-        m: 2,
-        r: getRad(2),
-        vx: 0,
-        vy: 0,
-        fx: 0,
-        fy: 0
-    },
-    {
-        type: 1,
-        x: 850,
-        y: 500,
-        m: 3,
-        r: getRad(3),
-        vx: 0,
-        vy: 0,
-        fx: 0,
-        fy: 0
-    }
-] 
+planets = [];
 
 for(let i = 0; i < 200; i++){
     let m = Math.random() * 2.5 + 0.5 
@@ -77,6 +54,10 @@ const gargantuaConfig = {
 }
 
 function respawn(thing){
+    if(thing.im){
+        thing.m = thing.im;
+        this.r = getRad(this.m);
+    }
     spawnControl.getSpawn(({x, y}) => {
         thing.x = x;
         thing.y = y;
@@ -113,6 +94,7 @@ wss.on('connection', function connection(ws) {
 
         (function addMinuteDifference(){
             this.m += Math.random() /1000;
+            this.im = m;
         })();
         respawn(this);
 
@@ -327,25 +309,19 @@ Array.prototype.forEachPlaying = (func) => {
                 });
             })();
         });
-        let [planetsData, playersData] = [
-            JSON.stringify({
-                type: 2,
-                planets
-            }),
-            JSON.stringify({
-                type: 1,
-                players: clients.map(client => ({
-                    x: client.x,
-                    y: client.y,
-                    name: client.name,
-                    id: client.id,
-                    r: client.r
-                }))
-            })
-        ];
+        let gameData = JSON.stringify({
+            type: 1,
+            planets,
+            players: clients.map(client => ({
+                x: client.x,
+                y: client.y,
+                name: client.name,
+                id: client.id,
+                r: client.r
+            })) 
+        })
         clients.forEachPlaying(client => {
-            client.sendMessage(playersData);
-            client.sendMessage(planetsData);
+            client.sendMessage(gameData);
         })
     }
 })();
