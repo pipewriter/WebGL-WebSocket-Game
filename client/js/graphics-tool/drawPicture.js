@@ -1,7 +1,7 @@
 window.drawpic = {};
 window.drawpic.config = {
-    vertFile: "drawPicture/vert.glsl",
-    fragFile: "drawPicture/frag.glsl",
+    vertFile: "./assets/shaders/pictureVert.glsl",
+    fragFile: "./assets/shaders/pictureFrag.glsl",
     vertAttributes: [
         {
             handle: "vertPos",
