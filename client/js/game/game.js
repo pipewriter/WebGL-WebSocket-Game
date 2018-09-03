@@ -10,7 +10,7 @@ const garguatiaConfig = {
 let player = {
     x: 0,
     y: 0,
-    dx: 0.8888,
+    dx: 0.888,
     dy: 0.5,
     uvx: 0,
     uvy: 0,
