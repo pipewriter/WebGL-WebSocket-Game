@@ -54,7 +54,7 @@ planets = [
     }
 ] 
 
-for(let i = 0; i < 100; i++){
+for(let i = 0; i < 200; i++){
     let m = Math.random() * 2.5 + 0.5 
     planets.push({
         type: Math.floor(Math.random() * 8),
@@ -127,7 +127,13 @@ wss.on('connection', function connection(ws) {
                         this.name = 'unnamed horse';
                     }
 
-                    this.sendMessage(JSON.stringify({type: 0, gargantua: gargantuaConfig}));
+                    this.sendMessage(JSON.stringify(
+                        {
+                            type: 0,
+                            gargantua: gargantuaConfig,
+                            playerId: this.id
+                        }
+                    ));
 
                     this.state = 'PLAYING';
                 } else {
@@ -321,24 +327,25 @@ Array.prototype.forEachPlaying = (func) => {
                 });
             })();
         });
-        let dataObj = {
-            type: 1,
-            players: [],
-            planets
-        };
-        clients.forEachPlaying(client => {
-            const {x, y, name, id, r} = client;
-            dataObj.players.push({
-                x,
-                y,
-                name,
-                id,
-                r
+        let [planetsData, playersData] = [
+            JSON.stringify({
+                type: 2,
+                planets
+            }),
+            JSON.stringify({
+                type: 1,
+                players: clients.map(client => ({
+                    x: client.x,
+                    y: client.y,
+                    name: client.name,
+                    id: client.id,
+                    r: client.r
+                }))
             })
-        });
+        ];
         clients.forEachPlaying(client => {
-            dataObj.playerId = client.id;
-            client.sendMessage(JSON.stringify(dataObj));
+            client.sendMessage(playersData);
+            client.sendMessage(planetsData);
         })
     }
 })();

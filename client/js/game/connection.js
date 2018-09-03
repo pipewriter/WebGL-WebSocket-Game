@@ -15,7 +15,9 @@
         if(data.type === 0){
             window.GAME.setInitialConstants(data);
         }else if(data.type === 1){
-            window.GAME.updateGame(data);
+            window.GAME.updatePlayers(data);
+        }else if(data.type === 2){
+            window.GAME.updatePlanets(data);
         }else{
             throw new Error('unrecognized data type')
         }
