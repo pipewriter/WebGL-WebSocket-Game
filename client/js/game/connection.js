@@ -7,6 +7,20 @@
     socket.addEventListener('open', function (event) {
         // do nothin
         send1();
+        let lastX = 0;
+        let lastY = 0;
+        setInterval(()=>{
+            let {uvx, uvy} = window.GAME.getPlayerDirection();
+            // if(uvx === lastX && uvy === lastY)
+                // return;
+            lastX = uvx;
+            lastY = uvy;
+            if(window.canvas.getMouseDown()){
+                socket.send(JSON.stringify({uvx, uvy}));
+            }else{
+                socket.send(JSON.stringify({uvx: 0, uvy: 0}))
+            }
+        }, 17)
     });
 
     // Listen for messages
@@ -26,18 +40,4 @@
         socket.send(JSON.stringify({name: "parker"}));
     }
 
-    let lastX = 0;
-    let lastY = 0;
-    setInterval(()=>{
-        let {uvx, uvy} = window.GAME.getPlayerDirection();
-        // if(uvx === lastX && uvy === lastY)
-            // return;
-        lastX = uvx;
-        lastY = uvy;
-        if(window.canvas.getMouseDown()){
-            socket.send(JSON.stringify({uvx, uvy}));
-        }else{
-            socket.send(JSON.stringify({uvx: 0, uvy: 0}))
-        }
-    }, 17)
 })();

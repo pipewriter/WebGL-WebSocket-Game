@@ -10,10 +10,20 @@ const config = {
             handle: "color",
             size:3
         }
+    ],
+    uniforms: [
+        {
+            handle: 'dist',
+            type: 'vec2'
+        },
+        {
+            handle: 'radius',
+            type: 'float'
+        }
     ]
 }
 
-async function initializeFromConfig({vertFile, fragFile, vertAttributes}){
+async function initializeFromConfig({vertFile, fragFile, vertAttributes, uniforms}){
     let gl = window.gl;
     let [vertCode, fragCode] = await Promise.all([
         window.utils.makeRequest("GET", vertFile),
@@ -46,6 +56,27 @@ async function initializeFromConfig({vertFile, fragFile, vertAttributes}){
 
     gl.useProgram(shaderProgram);
 
+    let uniformPerformers = [];
+    if(uniforms){
+        uniforms.forEach(({handle, type}) => {
+            let loc = gl.getUniformLocation(shaderProgram, handle);
+            let setUniform;
+            if(type === 'vec2'){
+                setUniform = (val) => {
+                    gl.uniform2fv(loc, val);
+                }
+            }else if(type === 'float'){
+                setUniform = (val) => {
+                    gl.uniform1f(loc, val);
+                }
+            }
+            uniformPerformers.push({
+                handle,
+                setUniform
+            })
+        })
+    }
+
     const vertexBuffer1 = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer1);
     const triangleBuffer1 = gl.createBuffer();
@@ -61,10 +92,13 @@ async function initializeFromConfig({vertFile, fragFile, vertAttributes}){
         offset += attrib.size;
     });
 
-    return function _drawElements(vertexData, indexData){
+    return function _drawElements(vertexData, indexData, uniformData){
 
         gl.useProgram(shaderProgram);
         
+        uniformPerformers.forEach(({handle, setUniform}) => {
+            setUniform(uniformData[handle]);
+        });
         gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer1);
         gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertexData),gl.STATIC_DRAW);
 

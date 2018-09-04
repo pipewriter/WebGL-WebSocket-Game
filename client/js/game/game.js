@@ -10,7 +10,7 @@ const garguatiaConfig = {
 let player = {
     x: 0,
     y: 0,
-    dx: 0.8888,
+    dx: 0.888,
     dy: 0.5,
     uvx: 0,
     uvy: 0,
@@ -169,6 +169,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
         await window.drawpic.init('./assets/images/planets/Planet8.png')
     ]
 
+    const drawCircle = await window.drawCircle.init({x: 500, y: 500, r: 500});
 
     function repeatRender(){
         function step(timestamp) {
@@ -187,6 +188,8 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                         drawbg({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});
                     }
             });
+
+            drawCircle({x: player.x, y: player.y})
 
             if(window.GAME.gargantua){
                 const {gargantua} = window.GAME;
