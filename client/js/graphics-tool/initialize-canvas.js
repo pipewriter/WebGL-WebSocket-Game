@@ -1,17 +1,17 @@
-// Exposes canvas.width, canvas.height, canvas.el
+window.GAME = {};
 
 (function createCanvas(){
-    let canvas = document.getElementById("canvas");
-    window.canvas.el = canvas;
+    window.GAME.canvas = document.getElementById("canvas");
+    const shell = document.getElementById('shell');
     const aspectX = 16;
     const aspectY = 9;
     let mouseX = 0;
     let mouseY = 0;
     let mousedown = false;
-    window.canvas.getMousePos = function getMousePos(){
+    window.GAME.getMousePos = function getMousePos(){
         return {x: mouseX, y: mouseY};
     }
-    window.canvas.getMouseDown = function getMouseDown(){
+    window.GAME.getMouseDown = function getMouseDown(){
         return mousedown;
     }
     let filter;
@@ -19,35 +19,38 @@
         filter = {offsetX, offsetY, width, height};
     }
     function setMousePos({x: curMX, y: curMY}){
-        mouseX = (curMX - filter.offsetX) / filter.width;
-        mouseY = (curMY - filter.offsetY) / filter.height;
+        mouseX = (curMX) / filter.width;
+        mouseY = (curMY) / filter.height;
     }
     function setCanvasToSize(width, height){
-        //width of window
-        //height of window 
+        
+        let values = {
+            width,
+            height
+        };
 
-        // canvas.style.width = width + "px";
-        // canvas.style.height = height + "px";
-        //maintain a 2 x 1 aspect ratio
         const calc = width * aspectY - height * aspectX;
         if(calc > 0){
-            //width is too large
-            //height is the bottleneck
-            canvas.height = height;
-            canvas.width = height * aspectX / aspectY;
-            canvas.offsetX = (width - canvas.width)/2;
-            canvas.offsetY = 0;
-            canvas.el.style.left = canvas.offsetX + 'px';
-            canvas.el.style.top = '0px';
+            values.gameWidth = height * aspectX / aspectY;
+            values.gameHeight = height;
+            values.offsetX = (width - values.gameWidth)/2;
         } else {
-            canvas.width = width;
-            canvas.height = width * aspectY / aspectX;
-            canvas.offsetX = 0;
-            canvas.offsetY = (height - canvas.height)/2;
-            canvas.el.style.top = canvas.offsetY + 'px';
-            canvas.el.style.left = '0px';
+            values.gameWidth = width;
+            values.gameHeight = width * aspectY / aspectX;
+            values.offsetY = (height - values.gameHeight)/2;
+
         }
-        setFilterVars(canvas);
+        const {gameWidth, gameHeight, offsetX, offsetY} = values;
+        shell.style.width = gameWidth + 'px';
+        shell.style.height = gameHeight + 'px';
+        shell.style.left = offsetX + 'px';
+        shell.style.top = offsetY + 'px';
+
+        const {canvas} = window.GAME;
+        canvas.width = gameWidth;
+        canvas.height = gameHeight;
+
+        setFilterVars(values);
     };
     setCanvasToSize(window.innerWidth, window.innerHeight);
     window.addEventListener("resize", function windowResize(resizeEvent){

@@ -1,5 +1,3 @@
-window.GAME = {};
-
 const garguatiaConfig = {
     x: 500,
     y: 500,
@@ -178,7 +176,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             window.GAME.adjustDrawCoords();
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            let mp = window.canvas.getMousePos();
+            let mp = window.GAME.getMousePos();
 
             window.GAME.updateDirection({mp});
 
