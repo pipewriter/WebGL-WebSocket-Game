@@ -333,7 +333,8 @@ Array.prototype.forEachPlaying = (func) => {
                 y: client.y,
                 name: client.name,
                 id: client.id,
-                r: client.r
+                r: client.r,
+                score: client.m
             })) 
         })
         clients.forEachPlaying(client => {

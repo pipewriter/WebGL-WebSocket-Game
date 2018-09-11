@@ -1,0 +1,15 @@
+#hiscores > div {
+    background: green;
+    position: absolute;
+    top:6.4%;
+    right:3.6%;
+}
+
+#hsTable td {
+    margin: 5px;
+}
+
+#leaderboard {
+    display: flex;
+    justify-content: center;
+}

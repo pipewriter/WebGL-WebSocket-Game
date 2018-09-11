@@ -83,10 +83,13 @@ window.GAME.updatePlayers = function updatePlayers({players}){
     for(let i = allPlayers.length - 1; i >= 0; i--){
         let subPlayer = allPlayers[i];
         if(subPlayer.lastServerUpdate !== serverUpdate){
+            // Delete an inactive player
             allPlayers.splice(i, 1);
         }
     }
     serverUpdate++;
+
+    window.GAME.setHiscores(players, window.GAME.playerId);
 }
 
 window.GAME.updatePlanets = function updatePlanets({planets}){
