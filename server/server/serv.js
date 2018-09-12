@@ -294,8 +294,9 @@ Array.prototype.forEachPlaying = (func) => {
                 let sumfx = 0;
                 let sumfy = 0;
                 findGForce(planet, gargantuaConfig, ({fx, fy}) => {
-                    sumfx += fx;
-                    sumfy += fy;
+                    const tweak = 1.05;
+                    sumfx += fx * tweak;
+                    sumfy += fy * tweak;
                 });
                 clients.forEach(blackhole => {
                     findGForce(planet, blackhole, ({fx, fy}) => {

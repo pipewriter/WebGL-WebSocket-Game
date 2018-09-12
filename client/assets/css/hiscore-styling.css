@@ -1,15 +1,33 @@
-#hiscores > div {
-    background: green;
+#hiscores > #hslist {
+    /* background: green; */
     position: absolute;
-    top:6.4%;
+    top:3.4%;
     right:3.6%;
 }
 
+#hiscores > #personalStats {
+    position: absolute;
+    bottom: 1.0%;
+    left: 1.0%;
+}
+
+#hiscores * {
+    color: white;
+    cursor: default;
+    user-select: none;
+}
+
 #hsTable td {
-    margin: 5px;
+    padding: 5px;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #leaderboard {
     display: flex;
     justify-content: center;
+    margin-bottom: 10px;
+    font-size: 1.2em;
 }
