@@ -294,8 +294,9 @@ Array.prototype.forEachPlaying = (func) => {
                 let sumfx = 0;
                 let sumfy = 0;
                 findGForce(planet, gargantuaConfig, ({fx, fy}) => {
-                    sumfx += fx;
-                    sumfy += fy;
+                    const tweak = 1.05;
+                    sumfx += fx * tweak;
+                    sumfy += fy * tweak;
                 });
                 clients.forEach(blackhole => {
                     findGForce(planet, blackhole, ({fx, fy}) => {
@@ -333,7 +334,8 @@ Array.prototype.forEachPlaying = (func) => {
                 y: client.y,
                 name: client.name,
                 id: client.id,
-                r: client.r
+                r: client.r,
+                score: client.m
             })) 
         })
         clients.forEachPlaying(client => {

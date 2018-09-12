@@ -1,5 +1,3 @@
-window.GAME = {};
-
 const garguatiaConfig = {
     x: 500,
     y: 500,
@@ -85,10 +83,13 @@ window.GAME.updatePlayers = function updatePlayers({players}){
     for(let i = allPlayers.length - 1; i >= 0; i--){
         let subPlayer = allPlayers[i];
         if(subPlayer.lastServerUpdate !== serverUpdate){
+            // Delete an inactive player
             allPlayers.splice(i, 1);
         }
     }
     serverUpdate++;
+
+    window.GAME.setHiscores(players, window.GAME.playerId);
 }
 
 window.GAME.updatePlanets = function updatePlanets({planets}){
@@ -178,7 +179,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             window.GAME.adjustDrawCoords();
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            let mp = window.canvas.getMousePos();
+            let mp = window.GAME.getMousePos();
 
             window.GAME.updateDirection({mp});
 

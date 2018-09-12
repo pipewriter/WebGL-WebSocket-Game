@@ -3,14 +3,38 @@
 <head>
     <meta charset="utf-8">
     <title>io game</title>
-    <link rel="stylesheet" href="assets/css/canvas-styling.css">
+    <link rel="stylesheet" href="assets/css/hiscore-styling.css">
+    <link rel="stylesheet" href="assets/css/font.css">
+    <link rel="stylesheet" href="assets/css/container-styling.css">
 </head>
 <body>
+<body ondragover="event.preventDefault()" ondragstart="return false;" ondrop="return false;" draggable="false">
+
+<div id="shell" draggable="false">
+    <canvas id="canvas" width="512" height="512">
+        Your browser does not support the HTML5 canvas tag.
+    </canvas>
+    <div id="names">
+
+    </div>
     
-<!-- <script src="connection.js"></script> -->
-<canvas id="canvas" width="512" height="512">
-    Your browser does not support the HTML5 canvas tag.
-</canvas>
+    <div id="hiscores">
+        <div id="hslist">
+            <div id="leaderboard">
+                <span>
+                    Leaderboard
+                </span>
+            </div>
+            <table id="hsTable">
+
+            </table>
+        </div>
+        <div id="personalStats">
+
+        </div>
+    </div>
+    <div id="menu"></div>
+</div>
 
 <script src="js/config.js"></script>
 <script src="js/graphics-tool/initialize-canvas.js">
@@ -22,6 +46,7 @@
 <script src="js/graphics-tool/renderingStrategyImage.js"></script>
 <script src="js/graphics-tool/drawCircle.js"></script>
 <script src="js/graphics-tool/drawPicture.js"></script>
+<script src="js/game/hiscores.js"></script>
 <script src="js/game/game.js"></script>
 <script src="js/game/connection.js"></script>
 <!-- <audio id="sound" src='sound.wav'></audio> -->

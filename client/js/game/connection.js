@@ -15,7 +15,7 @@
                 // return;
             lastX = uvx;
             lastY = uvy;
-            if(window.canvas.getMouseDown()){
+            if(window.GAME.getMouseDown()){
                 socket.send(JSON.stringify({uvx, uvy}));
             }else{
                 socket.send(JSON.stringify({uvx: 0, uvy: 0}))
