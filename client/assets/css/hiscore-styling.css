@@ -1,8 +1,8 @@
 #hiscores > #hslist {
     /* background: green; */
     position: absolute;
-    top:3.4%;
-    right:3.6%;
+    top:2.4%;
+    right:2.6%;
 }
 
 #hiscores > #personalStats {
@@ -28,6 +28,5 @@
 #leaderboard {
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
