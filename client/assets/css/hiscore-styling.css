@@ -12,7 +12,7 @@
 }
 
 #hiscores * {
-    color: white;
+    color: #ccc;
     cursor: default;
     user-select: none;
 }

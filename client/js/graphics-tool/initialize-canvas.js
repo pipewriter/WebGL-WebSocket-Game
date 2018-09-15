@@ -17,6 +17,7 @@ window.GAME = {};
     let filter;
     function setFilterVars({offsetX, offsetY, width, height}){
         filter = {offsetX, offsetY, width, height};
+        window.GAME.windowInfo = filter;
     }
     function setMousePos({x: curMX, y: curMY}){
         mouseX = (curMX) / filter.width;
@@ -30,6 +31,8 @@ window.GAME = {};
         };
 
         const calc = width * aspectY - height * aspectX;
+        values.offsetX = 0;
+        values.offsetY = 0;
         if(calc > 0){
             values.gameWidth = height * aspectX / aspectY;
             values.gameHeight = height;

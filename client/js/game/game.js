@@ -172,6 +172,8 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
 
     const drawCircle = await window.drawCircle.init({x: 500, y: 500, r: 500});
 
+    const cleanFuncs = [];
+
     function repeatRender(){
         function step(timestamp) {
             var seconds = timestamp/1000;
@@ -209,11 +211,37 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                     }
                 )
             });
+            // for(let i = 0; i < cleanFuncs.length; i++){
+            //     (cleanFuncs.pop())();
+            // }
             
             window.GAME.players.forEach(player => {
                 drawGuy({x: player.dx, y: player.dy, r: 0, h: 0.05 * player.r / 2.5, w: 0.05 * player.r / 2.5});
+                // draw all the name tags for everyone
+                // i need text, i need an x, i need a y, i need a width, i need maxHeight
+                const {offsetX, offsetY, width, height} = window.GAME.windowInfo;
+                const textConfig = {
+                    text: 'howdy pardner',
+
+
+
+
+
+                    x: player.dx/16*10*width + offsetX, //derived from dx and canvas offsetX?? canvas Width??
+
+
+
+
+
+                    y: player.dy/9*10*height + offsetY, //derived from dy and canvas offsetY?? canvas Height??
+                    width: 10, //player.r, //derived from r and canvas width?
+                    maxHeight: 10, //player.r //derived from r and canvas height??
+                }
+                if(cleanFuncs.length === 0)
+                cleanFuncs.push(window.GAME.textFiller(textConfig));
+
             });
-            
+
             window.requestAnimationFrame(step);
         }
         window.requestAnimationFrame(step);
