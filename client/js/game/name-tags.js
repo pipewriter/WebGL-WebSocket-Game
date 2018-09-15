@@ -22,7 +22,6 @@
             x: centerX-ow/2,
             y: centerY-oh/2
         }
-        console.log(offset)
         // para.style.transform = `translate(${offset.x}px, ${offset.y}px)`
         para.style.position = 'absolute';
         para.style.top = offset.y + 'px';

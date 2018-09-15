@@ -211,33 +211,23 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                     }
                 )
             });
-            // for(let i = 0; i < cleanFuncs.length; i++){
-            //     (cleanFuncs.pop())();
-            // }
+            for(let i = 0; i < cleanFuncs.length; i++){
+                (cleanFuncs.pop())();
+            }
             
+            const {offsetX, offsetY, width, height} = window.GAME.windowInfo;
+            const [gw, gh] = [ width - offsetX * 2, height - offsetY * 2];
             window.GAME.players.forEach(player => {
-                drawGuy({x: player.dx, y: player.dy, r: 0, h: 0.05 * player.r / 2.5, w: 0.05 * player.r / 2.5});
-                // draw all the name tags for everyone
-                // i need text, i need an x, i need a y, i need a width, i need maxHeight
-                const {offsetX, offsetY, width, height} = window.GAME.windowInfo;
+                const playerRadius = 0.05 * player.r / 2.5;
+                drawGuy({x: player.dx, y: player.dy, r: 0, h: playerRadius, w: 0.05 * player.r / 2.5});
+
                 const textConfig = {
                     text: 'howdy pardner',
-
-
-
-
-
-                    x: player.dx/16*10*width + offsetX, //derived from dx and canvas offsetX?? canvas Width??
-
-
-
-
-
-                    y: player.dy/9*10*height + offsetY, //derived from dy and canvas offsetY?? canvas Height??
-                    width: 10, //player.r, //derived from r and canvas width?
-                    maxHeight: 10, //player.r //derived from r and canvas height??
+                    x: player.dx/16*9*gw + offsetX, 
+                    y: player.dy*gh + offsetY,
+                    width: playerRadius * gh * 0.8,
+                    maxHeight: playerRadius * gh * 0.8,
                 }
-                if(cleanFuncs.length === 0)
                 cleanFuncs.push(window.GAME.textFiller(textConfig));
 
             });
