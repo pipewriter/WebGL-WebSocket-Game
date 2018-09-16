@@ -172,6 +172,8 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
 
     const drawCircle = await window.drawCircle.init({x: 500, y: 500, r: 500});
 
+    const cleanFuncs = [];
+
     function repeatRender(){
         function step(timestamp) {
             var seconds = timestamp/1000;
@@ -209,11 +211,27 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                     }
                 )
             });
+            for(let i = 0; i < cleanFuncs.length; i++){
+                (cleanFuncs.pop())();
+            }
             
+            const {offsetX, offsetY, width, height} = window.GAME.windowInfo;
+            const [gw, gh] = [ width - offsetX * 2, height - offsetY * 2];
             window.GAME.players.forEach(player => {
-                drawGuy({x: player.dx, y: player.dy, r: 0, h: 0.05 * player.r / 2.5, w: 0.05 * player.r / 2.5});
+                const playerRadius = 0.05 * player.r / 2.5;
+                drawGuy({x: player.dx, y: player.dy, r: 0, h: playerRadius, w: 0.05 * player.r / 2.5});
+
+                const textConfig = {
+                    text: 'howdy pardner',
+                    x: player.dx/16*9*gw + offsetX, 
+                    y: player.dy*gh + offsetY,
+                    width: playerRadius * gh * 0.8,
+                    maxHeight: playerRadius * gh * 0.8,
+                }
+                cleanFuncs.push(window.GAME.textFiller(textConfig));
+
             });
-            
+
             window.requestAnimationFrame(step);
         }
         window.requestAnimationFrame(step);
