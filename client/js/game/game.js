@@ -41,7 +41,6 @@ window.GAME.setInitialConstants = function setInitialConstants(
 ){
     window.GAME.gargantua = gargantua;
     window.GAME.playerId = playerId;
-    console.log('GOT EM', gargantua, playerId);
 };
 
 window.GAME.updatePlayer = function updatePlayer({x, y, r}) {
@@ -60,9 +59,9 @@ window.GAME.updatePlayers = function updatePlayers({players}){
     });
     window.GAME.updatePlayer(main);
     players.forEach(player => {
-        let found = window.GAME.players.find(element => {
-            element.id === player.id;
-        })
+        let found = window.GAME.players.find(element => 
+            element.id === player.id
+        );
         if(found){
             found.x = player.x;
             found.y = player.y;
@@ -70,12 +69,15 @@ window.GAME.updatePlayers = function updatePlayers({players}){
             found.lastServerUpdate = serverUpdate;
         }else{
             window.GAME.players.push({
+                id: player.id,
+                name: player.name,
                 x: player.x,
                 y: player.y,
                 dx: -100,
                 dy: -100,
                 r: player.r,
-                lastServerUpdate: serverUpdate
+                lastServerUpdate: serverUpdate,
+                nameTag: window.GAME.textFiller({text:player.name})
             })
         }
     });
@@ -84,6 +86,7 @@ window.GAME.updatePlayers = function updatePlayers({players}){
         let subPlayer = allPlayers[i];
         if(subPlayer.lastServerUpdate !== serverUpdate){
             // Delete an inactive player
+            subPlayer.nameTag.delete();
             allPlayers.splice(i, 1);
         }
     }
@@ -172,8 +175,6 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
 
     const drawCircle = await window.drawCircle.init({x: 500, y: 500, r: 500});
 
-    const cleanFuncs = [];
-
     function repeatRender(){
         function step(timestamp) {
             var seconds = timestamp/1000;
@@ -211,9 +212,6 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                     }
                 )
             });
-            for(let i = 0; i < cleanFuncs.length; i++){
-                (cleanFuncs.pop())();
-            }
             
             const {offsetX, offsetY, width, height} = window.GAME.windowInfo;
             const [gw, gh] = [ width - offsetX * 2, height - offsetY * 2];
@@ -222,14 +220,24 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                 drawGuy({x: player.dx, y: player.dy, r: 0, h: playerRadius, w: 0.05 * player.r / 2.5});
 
                 const textConfig = {
-                    text: 'howdy pardner',
                     x: player.dx/16*9*gw + offsetX, 
                     y: player.dy*gh + offsetY,
                     width: playerRadius * gh * 0.8,
-                    maxHeight: playerRadius * gh * 0.8,
+                    height: playerRadius * gh * 0.8,
                 }
-                cleanFuncs.push(window.GAME.textFiller(textConfig));
+                const {a, b, c, d} = {
+                    a: textConfig.x - offsetX < 0,
+                    b: textConfig.x - offsetX > gw,
+                    c: textConfig.y - offsetY < 0, //above the screen
+                    d: textConfig.y - offsetY > gh
+                }
 
+                if(a || b || c || d){
+                    player.nameTag.hide();
+                }else{
+                    player.nameTag.show();
+                    player.nameTag.move(textConfig);
+                }
             });
 
             window.requestAnimationFrame(step);
