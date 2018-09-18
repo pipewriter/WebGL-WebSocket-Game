@@ -68,7 +68,6 @@ window.GAME.updatePlayers = function updatePlayers({players}){
             found.r = player.r;
             found.lastServerUpdate = serverUpdate;
         }else{
-            console.log("ADDED" + player.id);
             window.GAME.players.push({
                 id: player.id,
                 name: player.name,
@@ -89,7 +88,6 @@ window.GAME.updatePlayers = function updatePlayers({players}){
             // Delete an inactive player
             subPlayer.nameTag.delete();
             allPlayers.splice(i, 1);
-            console.log('DELETED ' + subPlayer.id)
         }
     }
     serverUpdate++;
