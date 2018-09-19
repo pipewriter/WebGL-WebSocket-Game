@@ -239,12 +239,13 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                     y: player.dy*gh + offsetY,
                     width: playerDiameter * gh * 0.8,
                     height: playerDiameter * gh * 0.8,
+                    text: player.name
                 }
                 const {a, b, c, d} = {
                     a: textConfig.x - offsetX < 0,
-                    b: textConfig.x - offsetX > gw,
+                    b: textConfig.x - offsetX + textConfig.width/2 > gw,
                     c: textConfig.y - offsetY < 0, //above the screen
-                    d: textConfig.y - offsetY > gh
+                    d: textConfig.y - offsetY + textConfig.height/2> gh
                 }
 
                 if(a || b || c || d){

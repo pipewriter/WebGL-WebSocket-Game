@@ -11,7 +11,7 @@
 
         para.style.position = 'absolute';
         
-        const move = ({x, y, width, height}) => {
+        const move = ({x, y, width, height, text}) => {
             const {offsetWidth: ow, offsetHeight: oh} = para;
 
             let heightRatio = Number.POSITIVE_INFINITY;
@@ -22,6 +22,7 @@
                 x: x-ow/2,
                 y: y-oh/2
             }
+            para.innerHTML = text;
             para.style.top = offset.y + 'px';
             para.style.left = offset.x + 'px';
             para.style.transform = `scale(${scale}, ${scale})`
