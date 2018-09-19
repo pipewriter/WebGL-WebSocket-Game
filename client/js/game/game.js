@@ -43,12 +43,13 @@ window.GAME.setInitialConstants = function setInitialConstants(
     window.GAME.playerId = playerId;
 };
 
-window.GAME.updatePlayer = function updatePlayer({x, y, r}) {
+window.GAME.updatePlayer = function updatePlayer({x, y, r, score}) {
     player = {
         ...player,
         x,
         y,
-        r
+        r,
+        score
     }
 };
 
@@ -77,7 +78,8 @@ window.GAME.updatePlayers = function updatePlayers({players}){
                 dy: -100,
                 r: player.r,
                 lastServerUpdate: serverUpdate,
-                nameTag: window.GAME.textFiller({text:player.name})
+                nameTag: window.GAME.textFiller({text:player.name}),
+                score: player.score
             })
         }
     });
@@ -161,6 +163,8 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
     const drawGuy = await window.drawpic.init("./assets/images/blackhole.png");
     const drawbg = await window.drawpic.init("./assets/images/starryspace.png");
     const drawGargantua = await window.drawpic.init('./assets/images/supermassive.png');
+    const drawCrown = await window.drawpic.init('./assets/images/crown7.png');
+
 
     const drawPlanets = [
         await window.drawpic.init('./assets/images/planets/Planet1.png'),
@@ -215,15 +219,24 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             
             const {offsetX, offsetY, width, height} = window.GAME.windowInfo;
             const [gw, gh] = [ width - offsetX * 2, height - offsetY * 2];
+
+            let highestScoredPlayer;
+            let highestScore = 0;
+
             window.GAME.players.forEach(player => {
-                const playerRadius = 0.05 * player.r / 2.5;
-                drawGuy({x: player.dx, y: player.dy, r: 0, h: playerRadius, w: 0.05 * player.r / 2.5});
+                if(player.score > highestScore){
+                    highestScore = player.score;
+                    highestScoredPlayer = player;
+                }
+                
+                const playerDiameter = 0.05 * player.r / 2.5;
+                drawGuy({x: player.dx, y: player.dy, r: 0, h: playerDiameter, w: playerDiameter});
 
                 const textConfig = {
                     x: player.dx/16*9*gw + offsetX, 
                     y: player.dy*gh + offsetY,
-                    width: playerRadius * gh * 0.8,
-                    height: playerRadius * gh * 0.8,
+                    width: playerDiameter * gh * 0.8,
+                    height: playerDiameter * gh * 0.8,
                 }
                 const {a, b, c, d} = {
                     a: textConfig.x - offsetX < 0,
@@ -239,6 +252,12 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                     player.nameTag.move(textConfig);
                 }
             });
+
+            if(highestScoredPlayer){
+                let player = highestScoredPlayer;
+                const playerDiameter = 0.05 * player.r / 2.5;
+                drawCrown({x: player.dx, y: player.dy - playerDiameter/2*1.31, r: 0, h: playerDiameter/2, w: playerDiameter/2/6*8});
+            }
 
             window.requestAnimationFrame(step);
         }
