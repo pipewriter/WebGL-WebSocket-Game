@@ -68,6 +68,8 @@ window.GAME.updatePlayers = function updatePlayers({players}){
             found.y = player.y;
             found.r = player.r;
             found.lastServerUpdate = serverUpdate;
+            found.name = player.name;
+            found.score = player.score;
         }else{
             window.GAME.players.push({
                 id: player.id,
