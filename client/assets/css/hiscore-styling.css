@@ -25,6 +25,10 @@
     text-overflow: ellipsis;
 }
 
+#hsTable td img {
+    width:30px;
+}
+
 #leaderboard {
     display: flex;
     justify-content: center;
