@@ -2,6 +2,9 @@
     // Create WebSocket connection.
     const {wsAddress} = window.CONFIG;
     const socket = new WebSocket(`ws://${wsAddress}`);
+    let state = {
+        closed: false
+    }
 
     // Connection opened
     socket.addEventListener('open', function (event) {
@@ -15,10 +18,12 @@
                 // return;
             lastX = uvx;
             lastY = uvy;
-            if(window.GAME.getMouseDown()){
-                socket.send(JSON.stringify({uvx, uvy}));
-            }else{
-                socket.send(JSON.stringify({uvx: 0, uvy: 0}))
+            if(!state.closed){
+                if(window.GAME.getMouseDown()){
+                    socket.send(JSON.stringify({uvx, uvy}));
+                }else{
+                    socket.send(JSON.stringify({uvx: 0, uvy: 0}))
+                }
             }
         }, 17)
     });
@@ -31,13 +36,22 @@
         }else if(data.type === 1){
             window.GAME.updatePlayers(data);
             window.GAME.updatePlanets(data);
+        }else if(data.type === 2){
+            console.log('tombstone FOUND!')
+            console.log(data);
         }else{
             throw new Error('unrecognized data type')
         }
     });
 
     function send1(){
-        socket.send(JSON.stringify({name: "parker"}));
+        try{
+            socket.send(JSON.stringify({name: "parker"}));
+        }catch(e){
+            console.log('Couldn\'t send name');
+        }
     }
+
+    socket.onclose = () => state.closed = true;
 
 })();

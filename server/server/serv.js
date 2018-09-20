@@ -111,7 +111,7 @@ wss.on('connection', function connection(ws) {
                     if (playerData.name) {
                         this.name = playerData.name
                     } else {
-                        this.name = 'unnamed horse';
+                        this.name = 'unnamed';
                     }
 
                     this.sendMessage(JSON.stringify(
@@ -206,7 +206,15 @@ wss.on('connection', function connection(ws) {
                 const blackhole = gargantuaConfig;
                 if(collided){
                     console.log('gargantuad!');
-                    respawn(this);
+                    // respawn(this);
+                    this.isDead = true
+                    this.sendFinal = true
+                    this.results = {
+                        type: 2,
+                        killerType: 0,
+                        reason: 'Gargantua',
+                        finalScore: this.m
+                    }
                 }
             });
         }
@@ -221,6 +229,12 @@ wss.on('connection', function connection(ws) {
         }
 
         this.destroy = () => {
+            try{
+                if(this.sendFinal){
+                    const tombstone = JSON.stringify(this.results);
+                    ws.send(tombstone);
+                }
+            }catch(e){}
             console.log("closing websocket and removing listener");
             ws.removeListener("message", messageListener);
             ws.close();
