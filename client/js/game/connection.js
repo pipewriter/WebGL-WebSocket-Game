@@ -2,12 +2,16 @@
     // Create WebSocket connection.
     const {wsAddress} = window.CONFIG;
     const socket = new WebSocket(`ws://${wsAddress}`);
+    
     let state = {
         closed: false
     }
 
-    // Connection opened
-    socket.addEventListener('open', function (event) {
+    socket.onerror = () => {
+        console.log("SOCKET ERROR");
+    }
+
+    socket.onopen = () => {
         // do nothin
         send1();
         let lastX = 0;
@@ -26,10 +30,9 @@
                 }
             }
         }, 17)
-    });
+    }
 
-    // Listen for messages
-    socket.addEventListener('message', function (event) {
+    socket.onmessage = () => {
         const data = JSON.parse(event.data);
         if(data.type === 0){
             window.GAME.setInitialConstants(data);
@@ -42,7 +45,7 @@
         }else{
             throw new Error('unrecognized data type')
         }
-    });
+    }
 
     function send1(){
         try{
