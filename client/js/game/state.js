@@ -1,11 +1,11 @@
 (() => {
     function attemptConnection(){
-        
+
     }
 
-    function catchUnplayableGame(reason){
-        const errMsg = `Error connecting to server: ${reason}`;
-        renderTitleScreen(errMsg);
+    window.GAME.catchUnplayableGame = function catchUnplayableGame(reason){
+        // const errMsg = `Error connecting to server: ${reason}`;
+        renderTitleScreen(reason);
     }
 
     function renderTitleScreen(msg, finalScore){

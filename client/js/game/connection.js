@@ -7,19 +7,28 @@
         closed: false
     }
 
+    let freshlyOpened = false;
+
     socket.onerror = () => {
         console.log("SOCKET ERROR");
+        let err;
+        if(freshlyOpened){
+            err = "Error during game";
+            freshlyOpened = false;
+        }else{
+            err = "Error connecting to game";
+        }
+        window.GAME.catchUnplayableGame(err);
     }
 
     socket.onopen = () => {
+        freshlyOpened = true;
         // do nothin
         send1();
         let lastX = 0;
         let lastY = 0;
         setInterval(()=>{
             let {uvx, uvy} = window.GAME.getPlayerDirection();
-            // if(uvx === lastX && uvy === lastY)
-                // return;
             lastX = uvx;
             lastY = uvy;
             if(!state.closed){
@@ -32,7 +41,7 @@
         }, 17)
     }
 
-    socket.onmessage = () => {
+    socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if(data.type === 0){
             window.GAME.setInitialConstants(data);
