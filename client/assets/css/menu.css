@@ -22,23 +22,27 @@
 }
 
 #menu-msg {
-    padding-bottom: 50px;
+    padding-bottom: 70px;
     font-size: 1.5em;
 }
 
 #play-button {
-    background-color: gainsboro;
     border-radius: 10px;
-    padding: 10px;
+    padding: 5px;
     text-decoration: none;
-    color: indianred;
-    background-color: dimgray;
+    color: blueviolet;
     font-size: 2em;
+    border-color: blueviolet;
+    border-style: solid;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-width:2px;
+    margin-left:30px;
 }
 
 #play-button:hover {
-    background-color: lightgray;
-    color: red;
+    color: indianred;
+    border-color: indianred;
 }
 
 #user-name {
@@ -48,8 +52,12 @@
     font-size: 2em;
     border-style: solid;
     border-color: transparent;
-    border-bottom-color: dimgray;
+    border-bottom-color: blueviolet;
     color: indianred;
     text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;
     text-align: center;
+}
+
+#user-name::placeholder {
+    color: blueviolet;
 }
