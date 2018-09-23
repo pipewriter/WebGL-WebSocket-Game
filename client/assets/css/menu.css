@@ -37,7 +37,7 @@
     padding-left: 15px;
     padding-right: 15px;
     border-width:2px;
-    margin-left:30px;
+    margin-left:20px;
 }
 
 #play-button:hover {
@@ -55,7 +55,7 @@
     border-bottom-color: blueviolet;
     color: indianred;
     text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;
-    text-align: center;
+    text-align: right;
 }
 
 #user-name::placeholder {

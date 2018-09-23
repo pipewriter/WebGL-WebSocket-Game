@@ -1,7 +1,6 @@
 window.addEventListener("load", () => {
     const input = document.getElementById("user-name");
     const colorBorder = () => {
-        console.log(input.value)
         if(input.value !== ""){
             input.style.borderBottomColor = "indianred";
         } else {
