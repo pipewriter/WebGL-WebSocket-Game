@@ -31,7 +31,7 @@ window.addEventListener("load", () => {
         ];
 
         if(hiscore){
-            hsField.innerHTML = `Hiscore: ${hiscore}`;
+            hsField.innerHTML = `Hiscore: ${Math.ceil(hiscore)}`;
             hsField.style.color = "indianred";
         }else{
             hsField.innerHTML = "";

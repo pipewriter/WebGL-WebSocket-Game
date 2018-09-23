@@ -187,7 +187,15 @@ wss.on('connection', function connection(ws) {
                                 this.r = getRad(this.m);
                                 console.log('GROW!');
                                 // blackhole.isSwallowed = true;
-                                respawn(blackhole);
+                                // respawn(blackhole);
+                                blackhole.sendFinal = true
+                                blackhole.results = {
+                                    type: 2,
+                                    killerType: 1,
+                                    reason: this.name,
+                                    finalScore: blackhole.m
+                                }
+                                blackhole.isDead = true
                             }
                         }
                     });

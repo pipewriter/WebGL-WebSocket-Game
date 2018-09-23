@@ -1,4 +1,4 @@
 (() => {
     console.log("GAME ON!");
-    window.GAME.startGame();
+    // window.GAME.startGame();
 })();

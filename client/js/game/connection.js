@@ -21,7 +21,7 @@
 
         socket.onopen = () => {
             freshlyOpened = true;
-            //call window.GAME.liveGame();
+            window.GAME.hideMenu();
             // do nothin
             send1();
             let lastX = 0;
@@ -58,7 +58,7 @@
 
         function send1(){
             try{
-                socket.send(JSON.stringify({name: "parker"}));
+                socket.send(JSON.stringify({name: dirtyUserName}));
             }catch(e){
                 console.log('Couldn\'t send name');
             }
