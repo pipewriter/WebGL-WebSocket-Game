@@ -1,6 +1,6 @@
 (() => {
 
-    window.GAME.attemptConnection = function connection_stuff(){
+    window.GAME.attemptConnection = function connection_stuff({dirtyUserName}){
         // Create WebSocket connection.
         const {wsAddress} = window.CONFIG;
         const socket = new WebSocket(`ws://${wsAddress}`);
