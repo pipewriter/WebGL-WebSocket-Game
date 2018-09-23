@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="assets/css/hiscore-styling.css">
     <link rel="stylesheet" href="assets/css/font.css">
     <link rel="stylesheet" href="assets/css/container-styling.css">
+    <link rel="stylesheet" href="assets/css/menu.css">
 </head>
 <body>
 <body ondragover="event.preventDefault()" ondragstart="return false;" ondrop="return false;" draggable="false">
@@ -32,7 +33,18 @@
 
         </div>
     </div>
-    <div id="menu"></div>
+    <div id="menu">
+        <div id="menu-title">noescape.io</div>
+        <div id="menu-hs"></div>
+        <div id="menu-msg">
+            Welcome to noescape.io. Control your
+            character by holding the mouse button.
+        </div>
+        <div>
+            <input spellcheck="false" id="user-name" placeholder="Name" />
+            <a id="play-button" href="#">Play</a>
+        </div>
+    </div>
 </div>
 
 <script src="js/config.js"></script>
@@ -50,6 +62,7 @@
 <script src="js/game/name-tags.js"></script>
 <script src="js/game/game.js"></script>
 <script src="js/game/connection.js"></script>
+<script src="js/game/kickoff.js"></script> 
 <!-- <audio id="sound" src='sound.wav'></audio> -->
 
 

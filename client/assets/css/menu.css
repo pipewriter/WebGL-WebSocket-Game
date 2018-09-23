@@ -1,0 +1,55 @@
+#menu {
+    display: flex;
+    background: navy;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    color: blueviolet;
+    /* text-shadow 2px 2px red; */
+    text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;
+}
+
+#menu-title {
+    font-size: 5em;
+    padding-top:100px;
+    padding-bottom: 50px;
+    box-sizing: border-box;
+}
+
+#menu-hs {
+    padding-bottom: 20px;
+    font-size: 1.5em;
+}
+
+#menu-msg {
+    padding-bottom: 50px;
+    font-size: 1.5em;
+}
+
+#play-button {
+    background-color: gainsboro;
+    border-radius: 10px;
+    padding: 10px;
+    text-decoration: none;
+    color: indianred;
+    background-color: dimgray;
+    font-size: 2em;
+}
+
+#play-button:hover {
+    background-color: lightgray;
+    color: red;
+}
+
+#user-name {
+    outline: initial;
+    background-color: initial;
+    padding: 3px;
+    font-size: 2em;
+    border-style: solid;
+    border-color: transparent;
+    border-bottom-color: dimgray;
+    color: indianred;
+    text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;
+    text-align: center;
+}
