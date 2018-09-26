@@ -15,25 +15,9 @@ let player = {
     r: 2.5
 };
 
-let npcs = [];
-
 window.GAME.players = [];
 
 window.GAME.planets = [];
-
-// for(let j = 0; j < 51; j++){
-//     for(let i = 0; i < 51; i++){
-//         npcs.push({
-//             x: 0 + i * 20,
-//             y: 0 + j * 20,
-//             dx: -100,
-//             dy: -100,
-//             t: 0
-//         });
-//     }
-// }
-
-
 
 window.GAME.setInitialConstants = function setInitialConstants(
     {
@@ -136,8 +120,12 @@ const stars = {
     columns: Math.ceil(1.7777 / tileLength) + 1,
     rows: Math.ceil(1 / tileLength) + 1
 }
+starCoordList = []
 console.log(stars)
-starCoordList = [];
+for(let i = 0; i < stars.rows * stars.columns; i++){
+    starCoordList.push({x: 0, y: 0});
+}
+console.log(starCoordList)
 
 //translate everything
 window.GAME.adjustDrawCoords = function adjustDrawCoords(){
@@ -146,7 +134,6 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
 
     //Generate fresh starry coords
     calcNewCoords({x: 0, y: 0}, mainPlayer, ({x, y}) => {
-        starCoordList = [];
         let translation = {
             x: (x + tileLength)%tileLength + tileLength/2,
             y: (y + tileLength)%tileLength + tileLength/2
@@ -155,10 +142,11 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             const columnX = tileLength * column + translation.x;
             for(let row = 0; row < stars.rows; row++){
                 const rowY = tileLength * row + translation.y;
-                starCoordList.push({
-                    x: columnX,
-                    y: rowY
-                })
+                let coord = starCoordList[column * stars.rows + row];
+                console.log(column * stars.rows + row)
+                console.log(coord)
+                coord.x = columnX;
+                coord.y = rowY;
             }
         }
     });
@@ -214,13 +202,6 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             let mp = window.GAME.getMousePos();
 
             window.GAME.updateDirection({mp});
-
-            npcs.forEach(npc => {
-                if(npc.dx+0.2 > 0 && npc.dx < 2.0
-                    && npc.dy + 0.2 > 0 && npc.dy < 1.2){
-                        drawbg({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});
-                    }
-            });
 
             starCoordList.forEach(starCoord => {
                 drawbg({...starCoord, r: 0, h: 0.2, w: 0.2})
