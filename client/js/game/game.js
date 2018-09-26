@@ -21,17 +21,19 @@ window.GAME.players = [];
 
 window.GAME.planets = [];
 
-for(let j = 0; j < 51; j++){
-    for(let i = 0; i < 51; i++){
-        npcs.push({
-            x: 0 + i * 20,
-            y: 0 + j * 20,
-            dx: -100,
-            dy: -100,
-            t: 0
-        });
-    }
-}
+// for(let j = 0; j < 51; j++){
+//     for(let i = 0; i < 51; i++){
+//         npcs.push({
+//             x: 0 + i * 20,
+//             y: 0 + j * 20,
+//             dx: -100,
+//             dy: -100,
+//             t: 0
+//         });
+//     }
+// }
+
+
 
 window.GAME.setInitialConstants = function setInitialConstants(
     {
@@ -129,15 +131,36 @@ function calcNewCoords ({x:nx, y:ny}, {x:px, dx, y:py, dy}, callback){
     callback({x, y});
 }
 
+const tileLength = 0.2;
+const stars = {
+    columns: Math.ceil(1.7777 / tileLength) + 1,
+    rows: Math.ceil(1 / tileLength) + 1
+}
+console.log(stars)
+starCoordList = [];
+
+//translate everything
 window.GAME.adjustDrawCoords = function adjustDrawCoords(){
     
     const mainPlayer = player;
-    npcs.forEach(npc => {
-        calcNewCoords(npc, mainPlayer, ({x, y}) =>  {
-            // npc = {...npc, dx:x, dy:y};
-            npc.dx = x;
-            npc.dy = y;
-        })
+
+    //Generate fresh starry coords
+    calcNewCoords({x: 0, y: 0}, mainPlayer, ({x, y}) => {
+        starCoordList = [];
+        let translation = {
+            x: (x + tileLength)%tileLength + tileLength/2,
+            y: (y + tileLength)%tileLength + tileLength/2
+        }
+        for(let column = 0; column < stars.columns; column++){
+            const columnX = tileLength * column + translation.x;
+            for(let row = 0; row < stars.rows; row++){
+                const rowY = tileLength * row + translation.y;
+                starCoordList.push({
+                    x: columnX,
+                    y: rowY
+                })
+            }
+        }
     });
     window.GAME.players.forEach(player => {
         calcNewCoords(player, mainPlayer, ({x, y}) => {
@@ -198,6 +221,10 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                         drawbg({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});
                     }
             });
+
+            starCoordList.forEach(starCoord => {
+                drawbg({...starCoord, r: 0, h: 0.2, w: 0.2})
+            })
 
             drawCircle({x: player.x, y: player.y})
 

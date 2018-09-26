@@ -6,9 +6,6 @@
     }
 
     function renderTitleScreen(msg, finalScore){
-        //call window.GAME.deadGame();
-        //... this is the hard part
-        console.log(`rendering title screen ${msg}`);
         window.GAME.displayMenu({message: msg, hiscore: finalScore});
     }
 
