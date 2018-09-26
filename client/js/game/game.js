@@ -133,7 +133,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
     const mainPlayer = player;
 
     //Generate fresh starry coords
-    calcNewCoords({x: 0, y: 0}, mainPlayer, ({x, y}) => {
+    calcNewCoords({x: -1000000, y: -1000000}, mainPlayer, ({x, y}) => {
         let translation = {
             x: (x + tileLength)%tileLength + tileLength/2,
             y: (y + tileLength)%tileLength + tileLength/2
@@ -143,8 +143,6 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             for(let row = 0; row < stars.rows; row++){
                 const rowY = tileLength * row + translation.y;
                 let coord = starCoordList[column * stars.rows + row];
-                console.log(column * stars.rows + row)
-                console.log(coord)
                 coord.x = columnX;
                 coord.y = rowY;
             }
