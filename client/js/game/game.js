@@ -204,6 +204,9 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             window.GAME.adjustDrawCoords();
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+            gl.viewport(0, 0, window.GAME.canvas.width, window.GAME.canvas.height);
+
             let mp = window.GAME.getMousePos();
 
             window.GAME.updateDirection({mp});
