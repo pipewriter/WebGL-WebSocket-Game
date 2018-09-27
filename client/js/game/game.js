@@ -191,9 +191,16 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
     const drawCircle = await window.drawCircle.init({x: 500, y: 500, r: 500});
 
     function repeatRender(){
+        let now = performance.now();
+        let ticks = 0;
         function step(timestamp) {
             var seconds = timestamp/1000;
-            
+            if(now + 1000 < performance.now()){
+                console.log(`fps: ${ticks}`);
+                ticks = 0;
+                now = performance.now();
+            }
+            ticks++;
             window.GAME.adjustDrawCoords();
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -214,15 +221,23 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             }
 
             window.GAME.planets.forEach(planet => {
-                drawPlanets[planet.type](
-                    {
-                        x: planet.dx,
-                        y: planet.dy,
-                        r: 0,
-                        h: 0.05 * planet.r / 2.5,
-                        w: 0.05 * planet.r / 2.5
-                    }
-                )
+                let {dx, dy, r} = planet;
+                if(
+                    dx + r > 0 &&
+                    dx - r < 1.7777 &&
+                    dy + r > 0 &&
+                    dy - r < 1
+                ){
+                    drawPlanets[planet.type](
+                        {
+                            x: planet.dx,
+                            y: planet.dy,
+                            r: 0,
+                            h: 0.05 * planet.r / 2.5,
+                            w: 0.05 * planet.r / 2.5
+                        }
+                    );
+                }
             });
             
             const {offsetX, offsetY, width, height} = window.GAME.windowInfo;
@@ -267,7 +282,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                 const playerDiameter = 0.05 * player.r / 2.5;
                 drawCrown({x: player.dx, y: player.dy - playerDiameter/2*1.31, r: 0, h: playerDiameter/2, w: playerDiameter/2/6*8});
             }
-
+            
             window.requestAnimationFrame(step);
         }
         window.requestAnimationFrame(step);
