@@ -36,7 +36,7 @@ function getRad(mass){
 
 planets = [];
 
-for(let i = 0; i < 200; i++){
+for(let i = 0; i < 400; i++){
     let m = Math.random() * 2.5 + 0.5 
     planets.push({
         type: Math.floor(Math.random() * 8),
@@ -348,9 +348,15 @@ Array.prototype.forEachPlaying = (func) => {
                 })
             })();
         });
+        let truncateN = n => Number(Number(n).toFixed(4));
         let gameData = JSON.stringify({
             type: 1,
-            planets,
+            planets: planets.map(({type, x, y, r}) => ({
+                type,
+                x: truncateN(x),
+                y: truncateN(y),
+                r: truncateN(r),
+            })),
             players: clients.map(client => ({
                 x: client.x,
                 y: client.y,

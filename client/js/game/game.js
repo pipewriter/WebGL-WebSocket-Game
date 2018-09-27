@@ -15,23 +15,9 @@ let player = {
     r: 2.5
 };
 
-let npcs = [];
-
 window.GAME.players = [];
 
 window.GAME.planets = [];
-
-for(let j = 0; j < 51; j++){
-    for(let i = 0; i < 51; i++){
-        npcs.push({
-            x: 0 + i * 20,
-            y: 0 + j * 20,
-            dx: -100,
-            dy: -100,
-            t: 0
-        });
-    }
-}
 
 window.GAME.setInitialConstants = function setInitialConstants(
     {
@@ -129,15 +115,38 @@ function calcNewCoords ({x:nx, y:ny}, {x:px, dx, y:py, dy}, callback){
     callback({x, y});
 }
 
+const tileLength = 0.2;
+const stars = {
+    columns: Math.ceil(1.7777 / tileLength) + 1,
+    rows: Math.ceil(1 / tileLength) + 1
+}
+starCoordList = []
+console.log(stars)
+for(let i = 0; i < stars.rows * stars.columns; i++){
+    starCoordList.push({x: 0, y: 0});
+}
+console.log(starCoordList)
+
+//translate everything
 window.GAME.adjustDrawCoords = function adjustDrawCoords(){
     
     const mainPlayer = player;
-    npcs.forEach(npc => {
-        calcNewCoords(npc, mainPlayer, ({x, y}) =>  {
-            // npc = {...npc, dx:x, dy:y};
-            npc.dx = x;
-            npc.dy = y;
-        })
+
+    //Generate fresh starry coords
+    calcNewCoords({x: -1000000, y: -1000000}, mainPlayer, ({x, y}) => {
+        let translation = {
+            x: (x + tileLength)%tileLength + tileLength/2,
+            y: (y + tileLength)%tileLength + tileLength/2
+        }
+        for(let column = 0; column < stars.columns; column++){
+            const columnX = tileLength * column + translation.x;
+            for(let row = 0; row < stars.rows; row++){
+                const rowY = tileLength * row + translation.y;
+                let coord = starCoordList[column * stars.rows + row];
+                coord.x = columnX;
+                coord.y = rowY;
+            }
+        }
     });
     window.GAME.players.forEach(player => {
         calcNewCoords(player, mainPlayer, ({x, y}) => {
@@ -182,9 +191,16 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
     const drawCircle = await window.drawCircle.init({x: 500, y: 500, r: 500});
 
     function repeatRender(){
+        let now = performance.now();
+        let ticks = 0;
         function step(timestamp) {
             var seconds = timestamp/1000;
-            
+            if(now + 1000 < performance.now()){
+                console.log(`fps: ${ticks}`);
+                ticks = 0;
+                now = performance.now();
+            }
+            ticks++;
             window.GAME.adjustDrawCoords();
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -192,12 +208,9 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
 
             window.GAME.updateDirection({mp});
 
-            npcs.forEach(npc => {
-                if(npc.dx+0.2 > 0 && npc.dx < 2.0
-                    && npc.dy + 0.2 > 0 && npc.dy < 1.2){
-                        drawbg({x: npc.dx, y: npc.dy, r: 0, h: 0.2, w: 0.2});
-                    }
-            });
+            starCoordList.forEach(starCoord => {
+                drawbg({...starCoord, r: 0, h: 0.2, w: 0.2})
+            })
 
             drawCircle({x: player.x, y: player.y})
 
@@ -208,15 +221,23 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             }
 
             window.GAME.planets.forEach(planet => {
-                drawPlanets[planet.type](
-                    {
-                        x: planet.dx,
-                        y: planet.dy,
-                        r: 0,
-                        h: 0.05 * planet.r / 2.5,
-                        w: 0.05 * planet.r / 2.5
-                    }
-                )
+                let {dx, dy, r} = planet;
+                if(
+                    dx + r > 0 &&
+                    dx - r < 1.7777 &&
+                    dy + r > 0 &&
+                    dy - r < 1
+                ){
+                    drawPlanets[planet.type](
+                        {
+                            x: planet.dx,
+                            y: planet.dy,
+                            r: 0,
+                            h: 0.05 * planet.r / 2.5,
+                            w: 0.05 * planet.r / 2.5
+                        }
+                    );
+                }
             });
             
             const {offsetX, offsetY, width, height} = window.GAME.windowInfo;
@@ -261,7 +282,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                 const playerDiameter = 0.05 * player.r / 2.5;
                 drawCrown({x: player.dx, y: player.dy - playerDiameter/2*1.31, r: 0, h: playerDiameter/2, w: playerDiameter/2/6*8});
             }
-
+            
             window.requestAnimationFrame(step);
         }
         window.requestAnimationFrame(step);
