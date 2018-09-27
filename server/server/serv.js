@@ -51,11 +51,12 @@ for(let i = 0; i < 400; i++){
     });
 }
 
+const gargMass = 1000;
 const gargantuaConfig = {
     x: 500,
     y: 500,
-    m: 200,
-    r: 11.6960709
+    m: gargMass,
+    r: getRad(gargMass)
 }
 
 function respawn(thing){
@@ -201,15 +202,15 @@ wss.on('connection', function connection(ws) {
                     });
                 }
             });
-            planets.forEach(planet => {
-                collidedWith(this, planet, ({collided}) => {
-                    if(collided){
-                        this.m += planet.m;
-                        this.r = getRad(this.m);
-                        respawn(planet);
-                    }
-                })
-            });
+            // planets.forEach(planet => {
+            //     collidedWith(this, planet, ({collided}) => {
+            //         if(collided){
+            //             this.m += planet.m;
+            //             this.r = getRad(this.m);
+            //             respawn(planet);
+            //         }
+            //     })
+            // });
             collidedWith(this, gargantuaConfig, ({collided}) => {
                 const blackhole = gargantuaConfig;
                 if(collided){
@@ -316,15 +317,15 @@ Array.prototype.forEachPlaying = (func) => {
                 let sumfx = 0;
                 let sumfy = 0;
                 findGForce(planet, gargantuaConfig, ({fx, fy}) => {
-                    const tweak = 1.05;
+                    const tweak = 1;
                     sumfx += fx * tweak;
                     sumfy += fy * tweak;
                 });
                 clients.forEach(blackhole => {
-                    findGForce(planet, blackhole, ({fx, fy}) => {
-                        sumfx += fx;
-                        sumfy += fy;
-                    });
+                    // findGForce(planet, blackhole, ({fx, fy}) => {
+                    //     sumfx += fx;
+                    //     sumfy += fy;
+                    // }); 
                 })
                 planet.fx = sumfx;
                 planet.fy = sumfy;
