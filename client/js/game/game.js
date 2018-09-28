@@ -91,9 +91,12 @@ window.GAME.updatePlanets = function updatePlanets({planets}){
 }
 
 window.GAME.updateDirection = function updateDirection({mp}){
-    let [x, y] = [mp.x - 0.5, mp.y - 0.5];
+    
+    //inner width and height are for combatting the stretching
+    let [x, y] = [mp.x - 0.5, (mp.y - 0.5) * window.innerHeight / window.innerWidth];
     let mag = Math.sqrt(x * x + y * y); 
     let [uvx, uvy] = [x/mag, y/mag];
+
     player = {
         ...player,
         uvx,
