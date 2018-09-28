@@ -13,23 +13,30 @@ window.addEventListener("load", () => {
     input.onkeydown = colorBorder;
     input.onkeyup = colorBorder;
 
-
-
     const playButton = document.getElementById("play-button");
     
+    let inGame = false;
     playButton.onclick = () => {
-        window.GAME.attemptConnection({dirtyUserName: input.value});
+        if(!inGame){
+            inGame = true;
+            window.GAME.attemptConnection({dirtyUserName: input.value});
+        }
     }
+    window.addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            playButton.click();
+        }
+    });
     
     window.GAME.displayMenu = function displayMenu({message, hiscore}){
-
         menu.style.display = 'flex';
-
+        
         const [hsField, msgField] = [
             document.getElementById("menu-hs"),
             document.getElementById("menu-msg")
         ];
-
+        
         if(hiscore){
             hsField.innerHTML = `Hiscore: ${Math.ceil(hiscore)}`;
             hsField.style.color = "indianred";
@@ -37,6 +44,7 @@ window.addEventListener("load", () => {
             hsField.innerHTML = "";
         }
         msgField.innerHTML = message;
+        inGame = false;
     }
 
     window.GAME.hideMenu = function hideMenu(){
