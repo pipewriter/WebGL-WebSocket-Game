@@ -202,15 +202,15 @@ wss.on('connection', function connection(ws) {
                     });
                 }
             });
-            // planets.forEach(planet => {
-            //     collidedWith(this, planet, ({collided}) => {
-            //         if(collided){
-            //             this.m += planet.m;
-            //             this.r = getRad(this.m);
-            //             respawn(planet);
-            //         }
-            //     })
-            // });
+            planets.forEach(planet => {
+                collidedWith(this, planet, ({collided}) => {
+                    if(collided){
+                        this.m += planet.m;
+                        this.r = getRad(this.m);
+                        respawn(planet);
+                    }
+                })
+            });
             collidedWith(this, gargantuaConfig, ({collided}) => {
                 const blackhole = gargantuaConfig;
                 if(collided){
@@ -322,10 +322,10 @@ Array.prototype.forEachPlaying = (func) => {
                     sumfy += fy * tweak;
                 });
                 clients.forEach(blackhole => {
-                    // findGForce(planet, blackhole, ({fx, fy}) => {
-                    //     sumfx += fx;
-                    //     sumfy += fy;
-                    // }); 
+                    findGForce(planet, blackhole, ({fx, fy}) => {
+                        sumfx += fx;
+                        sumfy += fy;
+                    }); 
                 })
                 planet.fx = sumfx;
                 planet.fy = sumfy;
