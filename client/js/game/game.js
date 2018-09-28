@@ -56,6 +56,7 @@ window.GAME.updatePlayers = function updatePlayers({players}){
             found.lastServerUpdate = serverUpdate;
             found.name = player.name;
             found.score = player.score;
+            found.id = player.id;
         }else{
             window.GAME.players.push({
                 id: player.id,
@@ -90,9 +91,12 @@ window.GAME.updatePlanets = function updatePlanets({planets}){
 }
 
 window.GAME.updateDirection = function updateDirection({mp}){
-    let [x, y] = [mp.x - 0.5, mp.y - 0.5];
+    
+    //inner width and height are for combatting the stretching
+    let [x, y] = [mp.x - 0.5, (mp.y - 0.5) * window.innerHeight / window.innerWidth];
     let mag = Math.sqrt(x * x + y * y); 
     let [uvx, uvy] = [x/mag, y/mag];
+
     player = {
         ...player,
         uvx,
@@ -121,11 +125,9 @@ const stars = {
     rows: Math.ceil(1 / tileLength) + 1
 }
 starCoordList = []
-console.log(stars)
 for(let i = 0; i < stars.rows * stars.columns; i++){
     starCoordList.push({x: 0, y: 0});
 }
-console.log(starCoordList)
 
 //translate everything
 window.GAME.adjustDrawCoords = function adjustDrawCoords(){
@@ -175,6 +177,9 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
     const drawbg = await window.drawpic.init("./assets/images/starryspace.png");
     const drawGargantua = await window.drawpic.init('./assets/images/supermassive.png');
     const drawCrown = await window.drawpic.init('./assets/images/crown7.png');
+    const drawPointerRed = await window.drawpic.init('./assets/images/arrow-red.png');
+    const drawPointerGreen = await window.drawpic.init('./assets/images/arrow-green.png');
+    const drawPointerDarkGreen = await window.drawpic.init('./assets/images/arrow-dark-green.png');
 
 
     const drawPlanets = [
@@ -196,7 +201,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
         function step(timestamp) {
             var seconds = timestamp/1000;
             if(now + 1000 < performance.now()){
-                console.log(`fps: ${ticks}`);
+                // console.log(`fps: ${ticks}`);
                 ticks = 0;
                 now = performance.now();
             }
@@ -248,6 +253,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
 
             let highestScoredPlayer;
             let highestScore = 0;
+            let mainPlayer;
 
             window.GAME.players.forEach(player => {
                 if(player.score > highestScore){
@@ -278,6 +284,12 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                     player.nameTag.show();
                     player.nameTag.move(textConfig);
                 }
+
+
+                if(player.id === window.GAME.playerId){
+                    mainPlayer = player;
+                }
+
             });
 
             if(highestScoredPlayer){
@@ -285,7 +297,26 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                 const playerDiameter = 0.05 * player.r / 2.5;
                 drawCrown({x: player.dx, y: player.dy - playerDiameter/2*1.31, r: 0, h: playerDiameter/2, w: playerDiameter/2/6*8});
             }
-            
+
+            // window.toolbar
+
+            const {gargantua} = window.GAME;
+            if(mainPlayer){
+                const pr = window.TOOLS.radScaler(mainPlayer.r) * 1.1;
+                const size = pr/3 + 0.004;
+                window.TOOLS.unit({x:mainPlayer.dx, y:mainPlayer.dy}, {x: gargantua.dx, y: gargantua.dy}, ({ux, uy}) => {
+                    drawPointerRed({x: mainPlayer.dx + ux * pr, y: mainPlayer.dy + uy * pr,
+                        r: Math.atan2(ux, -uy), h: size, w: size});
+                });
+                {
+                    const {uvx: ux, uvy: uy} = player;
+                    const drawFunc = window.GAME.getMouseDown() ? drawPointerGreen : drawPointerDarkGreen;
+                    
+                    drawFunc({x: mainPlayer.dx + ux * pr, y: mainPlayer.dy + uy * pr,
+                        r: Math.atan2(ux, -uy), h: size, w: size});
+                }
+            }
+
             window.requestAnimationFrame(step);
         }
         window.requestAnimationFrame(step);

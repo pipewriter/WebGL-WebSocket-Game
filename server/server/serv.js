@@ -51,11 +51,19 @@ for(let i = 0; i < 400; i++){
     });
 }
 
+const gargMass = 1000;
 const gargantuaConfig = {
     x: 500,
     y: 500,
-    m: 200,
-    r: 11.6960709
+    m: gargMass,
+    r: getRad(gargMass)
+}
+
+function increaseMass(blackhole, linearAmount){
+    blackhole.unlimitedMass += linearAmount;
+    console.log(blackhole.unlimitedMass)
+    let newMass = gargMass - gargMass * Math.exp(-blackhole.unlimitedMass/1000);
+    blackhole.m = newMass;
 }
 
 function respawn(thing){
@@ -99,7 +107,8 @@ wss.on('connection', function connection(ws) {
 
         (() => {
             this.m += Math.random() /1000;
-            this.im = this.m;
+            this.unlimitedMass = this.m;
+            increaseMass(this, 0);
         })();
         respawn(this);
 
@@ -183,7 +192,7 @@ wss.on('connection', function connection(ws) {
                         collidedWith(this, blackhole, ({collided}) => {
                         if(collided){
                             if(this.m > blackhole.m && !blackhole.isSwallowed){
-                                this.m += blackhole.m;
+                                increaseMass(this, blackhole.m);
                                 this.r = getRad(this.m);
                                 console.log('GROW!');
                                 // blackhole.isSwallowed = true;
@@ -204,7 +213,7 @@ wss.on('connection', function connection(ws) {
             planets.forEach(planet => {
                 collidedWith(this, planet, ({collided}) => {
                     if(collided){
-                        this.m += planet.m;
+                        increaseMass(this, planet.m);
                         this.r = getRad(this.m);
                         respawn(planet);
                     }
@@ -316,7 +325,7 @@ Array.prototype.forEachPlaying = (func) => {
                 let sumfx = 0;
                 let sumfy = 0;
                 findGForce(planet, gargantuaConfig, ({fx, fy}) => {
-                    const tweak = 1.05;
+                    const tweak = 1;
                     sumfx += fx * tweak;
                     sumfy += fy * tweak;
                 });
@@ -324,7 +333,7 @@ Array.prototype.forEachPlaying = (func) => {
                     findGForce(planet, blackhole, ({fx, fy}) => {
                         sumfx += fx;
                         sumfy += fy;
-                    });
+                    }); 
                 })
                 planet.fx = sumfx;
                 planet.fy = sumfy;

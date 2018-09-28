@@ -48,8 +48,6 @@
                 window.GAME.updatePlayers(data);
                 window.GAME.updatePlanets(data);
             }else if(data.type === 2){
-                console.log('tombstone FOUND!')
-                console.log(data);
                 window.GAME.handleKillInfo(data);
             }else{
                 throw new Error('unrecognized data type')
