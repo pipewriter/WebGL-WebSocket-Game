@@ -59,6 +59,13 @@ const gargantuaConfig = {
     r: getRad(gargMass)
 }
 
+function increaseMass(blackhole, linearAmount){
+    blackhole.unlimitedMass += linearAmount;
+    console.log(blackhole.unlimitedMass)
+    let newMass = gargMass - gargMass * Math.exp(-blackhole.unlimitedMass/1000);
+    blackhole.m = newMass;
+}
+
 function respawn(thing){
     if(thing.im){
         thing.m = thing.im;
@@ -100,7 +107,8 @@ wss.on('connection', function connection(ws) {
 
         (() => {
             this.m += Math.random() /1000;
-            this.im = this.m;
+            this.unlimitedMass = this.m;
+            increaseMass(this, 0);
         })();
         respawn(this);
 
@@ -184,7 +192,7 @@ wss.on('connection', function connection(ws) {
                         collidedWith(this, blackhole, ({collided}) => {
                         if(collided){
                             if(this.m > blackhole.m && !blackhole.isSwallowed){
-                                this.m += blackhole.m;
+                                increaseMass(this, blackhole.m);
                                 this.r = getRad(this.m);
                                 console.log('GROW!');
                                 // blackhole.isSwallowed = true;
@@ -205,7 +213,7 @@ wss.on('connection', function connection(ws) {
             planets.forEach(planet => {
                 collidedWith(this, planet, ({collided}) => {
                     if(collided){
-                        this.m += planet.m;
+                        increaseMass(this, planet.m);
                         this.r = getRad(this.m);
                         respawn(planet);
                     }
