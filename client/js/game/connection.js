@@ -37,7 +37,7 @@
                     }
                 }
             }, 17)
-            setTimeout(window.GAME.hideMenu, 100);
+            setTimeout(window.GAME.hideMenu, 100); //Delete this line if you add hideMenu somewhere else
         }
 
         socket.onmessage = (event) => {

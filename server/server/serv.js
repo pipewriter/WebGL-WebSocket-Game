@@ -72,12 +72,12 @@ function increaseMass(blackhole, loser){
     blackhole.m = newMass;
 }
 
-function respawn(thing){
+function respawn(thing, isPlanet){
     if(thing.im){
         thing.m = thing.im;
         thing.r = getRad(thing.m);
     }
-    spawnControl.getSpawn(({x, y}) => {
+    spawnControl.getSpawn(({x, y}, isPlanet) => {
         thing.x = x;
         thing.y = y;
         thing.fx = 0;
@@ -86,6 +86,10 @@ function respawn(thing){
         thing.vy = 0;
     });
     orbitalVelocity(thing, gargantuaConfig, 1000, ({vx, vy}) => {
+        if(isPlanet){
+            vx *= 0.5;
+            vy *= 0.5;
+        }
         thing.vx = vx;
         thing.vy = vy;
     })
@@ -169,8 +173,8 @@ wss.on('connection', function connection(ws) {
                 sumfy += fy;
             });
             findGuideForce(this, delta, ({fx, fy}) => {
-                sumfx += fx * 0.3 * this.m;
-                sumfy += fy * 0.3 * this.m;
+                sumfx += fx * 0.3 * this.m / (1 + this.m/250);
+                sumfy += fy * 0.3 * this.m / (1 + this.m/250);
             });
             boundaryClamp(this, boundary, ({out, fux, fuy, force}) => {
                 if(out){
@@ -199,9 +203,6 @@ wss.on('connection', function connection(ws) {
                             if(this.m > blackhole.m && !blackhole.isSwallowed){
                                 increaseMass(this, blackhole);
                                 this.r = getRad(this.m);
-                                console.log('GROW!');
-                                // blackhole.isSwallowed = true;
-                                // respawn(blackhole);
                                 blackhole.sendFinal = true
                                 blackhole.results = {
                                     type: 2,
@@ -220,7 +221,7 @@ wss.on('connection', function connection(ws) {
                     if(collided){
                         increaseMass(this, planet);
                         this.r = getRad(this.m);
-                        respawn(planet);
+                        respawn(planet, true);
                     }
                 })
             });
@@ -228,7 +229,6 @@ wss.on('connection', function connection(ws) {
                 const blackhole = gargantuaConfig;
                 if(collided){
                     console.log('gargantuad!');
-                    // respawn(this);
                     this.isDead = true
                     this.sendFinal = true
                     this.results = {
@@ -333,7 +333,7 @@ Array.prototype.forEachPlaying = (func) => {
                 let sumfx = 0;
                 let sumfy = 0;
                 findGForce(planet, gargantuaConfig, ({fx, fy}) => {
-                    const tweak = 1;
+                    const tweak = .5;
                     sumfx += fx * tweak;
                     sumfy += fy * tweak;
                 });
@@ -355,12 +355,12 @@ Array.prototype.forEachPlaying = (func) => {
                 });
                 collidedWith(planet, gargantuaConfig, ({collided}) => {
                     if(collided){
-                        respawn(planet);
+                        respawn(planet, true);
                     }
                 });
                 boundaryClamp(planet, boundary, ({out, fux, fuy, force}) => {
                     if(out){
-                        respawn(planet);
+                        respawn(planet, true);
                     }
                 })
             })();
