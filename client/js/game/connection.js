@@ -21,7 +21,6 @@
 
         socket.onopen = () => {
             freshlyOpened = true;
-            window.GAME.hideMenu();
             // do nothin
             send1();
             let lastX = 0;
@@ -38,6 +37,7 @@
                     }
                 }
             }, 17)
+            setTimeout(window.GAME.hideMenu, 100);
         }
 
         socket.onmessage = (event) => {
