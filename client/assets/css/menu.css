@@ -1,11 +1,10 @@
 #menu {
     display: flex;
-    background: navy;
+    background: rgba(0, 0, 0, 0.8);
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     color: blueviolet;
-    /* text-shadow 2px 2px red; */
     text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;
 }
 

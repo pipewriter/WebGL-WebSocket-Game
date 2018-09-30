@@ -30,6 +30,7 @@ window.addEventListener("load", () => {
     });
     
     window.GAME.displayMenu = function displayMenu({message, hiscore}){
+        window.GAME.menuHidden = false;
         menu.style.display = 'flex';
         
         const [hsField, msgField] = [
@@ -48,6 +49,7 @@ window.addEventListener("load", () => {
     }
 
     window.GAME.hideMenu = function hideMenu(){
+        window.GAME.menuHidden = true;
         menu.style.display = 'none';
     }
 });

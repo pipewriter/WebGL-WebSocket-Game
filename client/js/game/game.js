@@ -314,7 +314,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             }
 
             const {gargantua} = window.GAME;
-            if(mainPlayer){
+            if(mainPlayer && window.GAME.menuHidden){
                 const pr = window.TOOLS.radScaler(mainPlayer.r) * 1.1;
                 const size = pr/3 + 0.004;
                 window.TOOLS.unit({x:mainPlayer.dx, y:mainPlayer.dy}, {x: gargantua.dx, y: gargantua.dy}, ({ux, uy}) => {
