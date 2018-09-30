@@ -21,7 +21,6 @@
 
         socket.onopen = () => {
             freshlyOpened = true;
-            window.GAME.hideMenu();
             // do nothin
             send1();
             let lastX = 0;
@@ -38,6 +37,7 @@
                     }
                 }
             }, 17)
+            setTimeout(window.GAME.hideMenu, 100); //Delete this line if you add hideMenu somewhere else
         }
 
         socket.onmessage = (event) => {
@@ -48,8 +48,6 @@
                 window.GAME.updatePlayers(data);
                 window.GAME.updatePlanets(data);
             }else if(data.type === 2){
-                console.log('tombstone FOUND!')
-                console.log(data);
                 window.GAME.handleKillInfo(data);
             }else{
                 throw new Error('unrecognized data type')

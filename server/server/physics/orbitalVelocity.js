@@ -15,7 +15,8 @@ function calculateOrbitalVelocity(
     const r = Math.sqrt(x3*x3+y3*y3);
     const [rx, ry] = [x3/r,y3/r];
     const vmag = Math.sqrt(G * M / r);
-    const [vx, vy] = [ -1 * vmag * ry, vmag * rx];
+    const rand = Math.random();
+    const [vx, vy] = rand > .5 ? [ vmag * ry, -1 * vmag * rx] : [ -1 * vmag * ry, vmag * rx];
     callback({vx, vy});
 }
 
