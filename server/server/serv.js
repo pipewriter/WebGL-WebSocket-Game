@@ -1,6 +1,7 @@
 const WebSocket = require('ws');
 const now = require("performance-now")
 let findGForce = require('./physics/gravitationalForce');
+let specialGravity = require('./physics/specialGravity');
 let boundaryClamp = require('./physics/boundaryClamp');
 let {findNewPos, findNewVel} = require('./physics/kinematics');
 let findGuideForce = require('./physics/guideForce');
@@ -59,10 +60,15 @@ const gargantuaConfig = {
     r: getRad(gargMass)
 }
 
-function increaseMass(blackhole, linearAmount){
-    blackhole.unlimitedMass += linearAmount;
-    console.log(blackhole.unlimitedMass)
+function increaseMass(blackhole, loser){
+
+    blackhole.unlimitedMass += loser.m;
     let newMass = gargMass - gargMass * Math.exp(-blackhole.unlimitedMass/1000);
+
+    let deltaM = newMass - blackhole.m; //how much bigger;
+    blackhole.vx = (blackhole.vx * blackhole.m +  loser.vx * deltaM)/newMass;
+    blackhole.vy = (blackhole.vy * blackhole.m +  loser.vy * deltaM)/newMass;
+
     blackhole.m = newMass;
 }
 
@@ -97,6 +103,8 @@ wss.on('connection', function connection(ws) {
         this.vx = 0;
         this.vy = 0;
         this.m = 4;
+        this.m += Math.random() /1000;
+        this.unlimitedMass = this.m;
         this.fx = 0;
         this.fy = 0;
         
@@ -105,11 +113,6 @@ wss.on('connection', function connection(ws) {
         this.guideStrength = 100;
         this.isSwallowed = false;
 
-        (() => {
-            this.m += Math.random() /1000;
-            this.unlimitedMass = this.m;
-            increaseMass(this, 0);
-        })();
         respawn(this);
 
         let messageListener = (message) => {
@@ -161,7 +164,7 @@ wss.on('connection', function connection(ws) {
                     });
                 }
             });
-            findGForce(this, gargantuaConfig, ({fx, fy}) => {
+            specialGravity(this, gargantuaConfig, ({fx, fy}) => {
                 sumfx += fx;
                 sumfy += fy;
             });
@@ -175,6 +178,8 @@ wss.on('connection', function connection(ws) {
                     force = 1000
                     sumfx += fux * this.m * force;
                     sumfy += fuy * this.m * force;
+                    this.vx *= .99;
+                    this.vy *= .99;
                 }
             })
             this.fx = sumfx;
@@ -192,7 +197,7 @@ wss.on('connection', function connection(ws) {
                         collidedWith(this, blackhole, ({collided}) => {
                         if(collided){
                             if(this.m > blackhole.m && !blackhole.isSwallowed){
-                                increaseMass(this, blackhole.m);
+                                increaseMass(this, blackhole);
                                 this.r = getRad(this.m);
                                 console.log('GROW!');
                                 // blackhole.isSwallowed = true;
@@ -213,7 +218,7 @@ wss.on('connection', function connection(ws) {
             planets.forEach(planet => {
                 collidedWith(this, planet, ({collided}) => {
                     if(collided){
-                        increaseMass(this, planet.m);
+                        increaseMass(this, planet);
                         this.r = getRad(this.m);
                         respawn(planet);
                     }
@@ -320,6 +325,9 @@ Array.prototype.forEachPlaying = (func) => {
         clients.forEachPlaying(client => {
             client.update(delta, clients);
         });
+        // clients.forEachPlaying(blackhole => {
+        //     blackhole.m *= .999;
+        // });
         planets.forEach(planet => {
             (function planetUpdate(){
                 let sumfx = 0;
@@ -350,7 +358,7 @@ Array.prototype.forEachPlaying = (func) => {
                         respawn(planet);
                     }
                 });
-                boundaryClamp(planet, planetBoundary, ({out, fux, fuy, force}) => {
+                boundaryClamp(planet, boundary, ({out, fux, fuy, force}) => {
                     if(out){
                         respawn(planet);
                     }
