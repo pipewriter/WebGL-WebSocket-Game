@@ -1,6 +1,7 @@
 const WebSocket = require('ws');
 const now = require("performance-now")
 let findGForce = require('./physics/gravitationalForce');
+let specialGravity = require('./physics/specialGravity');
 let boundaryClamp = require('./physics/boundaryClamp');
 let {findNewPos, findNewVel} = require('./physics/kinematics');
 let findGuideForce = require('./physics/guideForce');
@@ -59,19 +60,24 @@ const gargantuaConfig = {
     r: getRad(gargMass)
 }
 
-function increaseMass(blackhole, linearAmount){
-    blackhole.unlimitedMass += linearAmount;
-    console.log(blackhole.unlimitedMass)
+function increaseMass(blackhole, loser){
+
+    blackhole.unlimitedMass += loser.m;
     let newMass = gargMass - gargMass * Math.exp(-blackhole.unlimitedMass/1000);
+
+    let deltaM = newMass - blackhole.m; //how much bigger;
+    blackhole.vx = (blackhole.vx * blackhole.m +  loser.vx * deltaM)/newMass;
+    blackhole.vy = (blackhole.vy * blackhole.m +  loser.vy * deltaM)/newMass;
+
     blackhole.m = newMass;
 }
 
-function respawn(thing){
+function respawn(thing, isPlanet){
     if(thing.im){
         thing.m = thing.im;
         thing.r = getRad(thing.m);
     }
-    spawnControl.getSpawn(({x, y}) => {
+    spawnControl.getSpawn(({x, y}, isPlanet) => {
         thing.x = x;
         thing.y = y;
         thing.fx = 0;
@@ -80,6 +86,10 @@ function respawn(thing){
         thing.vy = 0;
     });
     orbitalVelocity(thing, gargantuaConfig, 1000, ({vx, vy}) => {
+        if(isPlanet){
+            vx *= 0.5;
+            vy *= 0.5;
+        }
         thing.vx = vx;
         thing.vy = vy;
     })
@@ -97,6 +107,8 @@ wss.on('connection', function connection(ws) {
         this.vx = 0;
         this.vy = 0;
         this.m = 4;
+        this.m += Math.random() /1000;
+        this.unlimitedMass = this.m;
         this.fx = 0;
         this.fy = 0;
         
@@ -105,11 +117,6 @@ wss.on('connection', function connection(ws) {
         this.guideStrength = 100;
         this.isSwallowed = false;
 
-        (() => {
-            this.m += Math.random() /1000;
-            this.unlimitedMass = this.m;
-            increaseMass(this, 0);
-        })();
         respawn(this);
 
         let messageListener = (message) => {
@@ -161,13 +168,13 @@ wss.on('connection', function connection(ws) {
                     });
                 }
             });
-            findGForce(this, gargantuaConfig, ({fx, fy}) => {
+            specialGravity(this, gargantuaConfig, ({fx, fy}) => {
                 sumfx += fx;
                 sumfy += fy;
             });
             findGuideForce(this, delta, ({fx, fy}) => {
-                sumfx += fx * 0.3 * this.m;
-                sumfy += fy * 0.3 * this.m;
+                sumfx += fx * 0.3 * this.m / (1 + this.m/250);
+                sumfy += fy * 0.3 * this.m / (1 + this.m/250);
             });
             boundaryClamp(this, boundary, ({out, fux, fuy, force}) => {
                 if(out){
@@ -175,6 +182,8 @@ wss.on('connection', function connection(ws) {
                     force = 1000
                     sumfx += fux * this.m * force;
                     sumfy += fuy * this.m * force;
+                    this.vx *= .99;
+                    this.vy *= .99;
                 }
             })
             this.fx = sumfx;
@@ -192,11 +201,8 @@ wss.on('connection', function connection(ws) {
                         collidedWith(this, blackhole, ({collided}) => {
                         if(collided){
                             if(this.m > blackhole.m && !blackhole.isSwallowed){
-                                increaseMass(this, blackhole.m);
+                                increaseMass(this, blackhole);
                                 this.r = getRad(this.m);
-                                console.log('GROW!');
-                                // blackhole.isSwallowed = true;
-                                // respawn(blackhole);
                                 blackhole.sendFinal = true
                                 blackhole.results = {
                                     type: 2,
@@ -213,9 +219,9 @@ wss.on('connection', function connection(ws) {
             planets.forEach(planet => {
                 collidedWith(this, planet, ({collided}) => {
                     if(collided){
-                        increaseMass(this, planet.m);
+                        increaseMass(this, planet);
                         this.r = getRad(this.m);
-                        respawn(planet);
+                        respawn(planet, true);
                     }
                 })
             });
@@ -223,7 +229,6 @@ wss.on('connection', function connection(ws) {
                 const blackhole = gargantuaConfig;
                 if(collided){
                     console.log('gargantuad!');
-                    // respawn(this);
                     this.isDead = true
                     this.sendFinal = true
                     this.results = {
@@ -320,12 +325,15 @@ Array.prototype.forEachPlaying = (func) => {
         clients.forEachPlaying(client => {
             client.update(delta, clients);
         });
+        // clients.forEachPlaying(blackhole => {
+        //     blackhole.m *= .999;
+        // });
         planets.forEach(planet => {
             (function planetUpdate(){
                 let sumfx = 0;
                 let sumfy = 0;
                 findGForce(planet, gargantuaConfig, ({fx, fy}) => {
-                    const tweak = 1;
+                    const tweak = .5;
                     sumfx += fx * tweak;
                     sumfy += fy * tweak;
                 });
@@ -347,12 +355,12 @@ Array.prototype.forEachPlaying = (func) => {
                 });
                 collidedWith(planet, gargantuaConfig, ({collided}) => {
                     if(collided){
-                        respawn(planet);
+                        respawn(planet, true);
                     }
                 });
-                boundaryClamp(planet, planetBoundary, ({out, fux, fuy, force}) => {
+                boundaryClamp(planet, boundary, ({out, fux, fuy, force}) => {
                     if(out){
-                        respawn(planet);
+                        respawn(planet, true);
                     }
                 })
             })();

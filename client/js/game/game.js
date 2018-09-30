@@ -217,15 +217,25 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             window.GAME.updateDirection({mp});
 
             starCoordList.forEach(starCoord => {
-                drawbg({...starCoord, r: 0, h: 0.2, w: 0.2})
-            })
+                drawbg({
+                    ...starCoord,
+                    r: 0,
+                    h: 0.2,
+                    w: 0.2
+                });
+            });
 
             drawCircle({x: player.x, y: player.y})
 
             if(window.GAME.gargantua){
                 const {gargantua} = window.GAME;
-                drawGargantua({x: gargantua.dx, y: gargantua.dy, r: 0, h: 0.05 * 2 * gargantua.r / 2.5,
-                    w: 0.05 * 2 * gargantua.r / 2.5});
+                drawGargantua({
+                    x: gargantua.dx,
+                    y: gargantua.dy,
+                    r: 0,
+                    h: 0.05 * 2 * gargantua.r / 2.5,
+                    w: 0.05 * 2 * gargantua.r / 2.5
+                });
             }
 
             window.GAME.planets.forEach(planet => {
@@ -295,25 +305,38 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
             if(highestScoredPlayer){
                 let player = highestScoredPlayer;
                 const playerDiameter = 0.05 * player.r / 2.5;
-                drawCrown({x: player.dx, y: player.dy - playerDiameter/2*1.31, r: 0, h: playerDiameter/2, w: playerDiameter/2/6*8});
+                drawCrown({
+                    x: player.dx,
+                    y: player.dy - playerDiameter/2*1.31,
+                    r: 0, h: playerDiameter/2,
+                    w: playerDiameter/2/6*8
+                });
             }
-
-            // window.toolbar
 
             const {gargantua} = window.GAME;
             if(mainPlayer){
                 const pr = window.TOOLS.radScaler(mainPlayer.r) * 1.1;
                 const size = pr/3 + 0.004;
                 window.TOOLS.unit({x:mainPlayer.dx, y:mainPlayer.dy}, {x: gargantua.dx, y: gargantua.dy}, ({ux, uy}) => {
-                    drawPointerRed({x: mainPlayer.dx + ux * pr, y: mainPlayer.dy + uy * pr,
-                        r: Math.atan2(ux, -uy), h: size, w: size});
+                    drawPointerRed({
+                        x: mainPlayer.dx + ux * pr,
+                        y: mainPlayer.dy + uy * pr,
+                        r: Math.atan2(ux, -uy),
+                        h: size,
+                        w: size
+                    });
                 });
                 {
                     const {uvx: ux, uvy: uy} = player;
                     const drawFunc = window.GAME.getMouseDown() ? drawPointerGreen : drawPointerDarkGreen;
                     
-                    drawFunc({x: mainPlayer.dx + ux * pr, y: mainPlayer.dy + uy * pr,
-                        r: Math.atan2(ux, -uy), h: size, w: size});
+                    drawFunc({
+                        x: mainPlayer.dx + ux * pr,
+                        y: mainPlayer.dy + uy * pr,
+                        r: Math.atan2(ux, -uy),
+                        h: size,
+                        w: size
+                    });
                 }
             }
 
