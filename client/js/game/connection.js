@@ -2,8 +2,8 @@
 
     window.GAME.attemptConnection = function connection_stuff({dirtyUserName}){
         // Create WebSocket connection.
-        const {wsAddress} = window.CONFIG;
-        const socket = new WebSocket(`ws://${wsAddress}`);
+        const wsAddress = SERVERS.get();
+        const socket = new WebSocket(`ws://${wsAddress}:8080`);
 
         let freshlyOpened = false;
 
