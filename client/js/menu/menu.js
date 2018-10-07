@@ -1,6 +1,7 @@
 window.addEventListener("load", () => {
     
     const menu = document.getElementById("menu");
+    const hiscores = document.getElementById("hiscores")
     
     const input = document.getElementById("user-name");
     const colorBorder = () => {
@@ -32,6 +33,7 @@ window.addEventListener("load", () => {
     window.GAME.displayMenu = function displayMenu({message, hiscore}){
         window.GAME.menuHidden = false;
         menu.style.display = 'flex';
+        hiscores.style.display = 'none';
         
         const [hsField, msgField] = [
             document.getElementById("menu-hs"),
@@ -51,5 +53,6 @@ window.addEventListener("load", () => {
     window.GAME.hideMenu = function hideMenu(){
         window.GAME.menuHidden = true;
         menu.style.display = 'none';
+        hiscores.style.display = 'initial';
     }
 });
