@@ -319,11 +319,11 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                 const size = pr/3 + 0.004;
                 window.TOOLS.unit({x:mainPlayer.dx, y:mainPlayer.dy}, {x: gargantua.dx, y: gargantua.dy}, ({ux, uy}) => {
                     drawPointerRed({
-                        x: mainPlayer.dx + ux * pr,
-                        y: mainPlayer.dy + uy * pr,
-                        r: Math.atan2(ux, -uy),
+                        x: mainPlayer.dx + ux * pr * 1.13,
+                        y: mainPlayer.dy + uy * pr * 1.13,
+                        r: Math.atan2(ux, -uy) + Math.PI,
                         h: size,
-                        w: size
+                        w: size 
                     });
                 });
                 {
