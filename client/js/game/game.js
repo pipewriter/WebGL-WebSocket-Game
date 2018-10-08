@@ -323,7 +323,7 @@ window.GAME.adjustDrawCoords = function adjustDrawCoords(){
                         y: mainPlayer.dy + uy * pr,
                         r: Math.atan2(ux, -uy),
                         h: size,
-                        w: size
+                        w: size 
                     });
                 });
                 {

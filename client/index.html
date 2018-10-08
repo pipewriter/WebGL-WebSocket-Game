@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="assets/css/hiscore-styling.css">
     <link rel="stylesheet" href="assets/css/font.css">
     <link rel="stylesheet" href="assets/css/container-styling.css">
+    <link rel="stylesheet" href="assets/css/server-picker.css">
     <link rel="stylesheet" href="assets/css/menu.css">
 
     <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
@@ -41,7 +42,7 @@
     <div id="names">
     </div>
     
-    <div id="hiscores">
+    <div id="hiscores" style="display: none">
         <div id="hslist">
             <div id="leaderboard">
                 <span>
@@ -57,6 +58,8 @@
         </div>
     </div>
     <div id="menu">
+        <div id="serverPicker">
+        </div>
         <div id="menu-title">noescape.io</div>
         <div id="menu-hs"></div>
         <div id="menu-msg">
@@ -71,7 +74,9 @@
 </div>
 
 <script src="js/config.js"></script>
+<script src="js/serverRetriever.js"></script>
 <script src="js/menu/menu.js"></script>
+<script src="js/menu/serverPicker.js"></script>
 <script src="js/graphics-tool/initialize-canvas.js">
     /* exposes canvas.el canvas.height canvas.width*/
 </script>
