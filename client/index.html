@@ -1,11 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126804612-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-126804612-1');
+    </script>
+    
     <meta charset="utf-8">
-    <title>io game</title>
+    <title>noescape.io</title>
     <link rel="stylesheet" href="assets/css/hiscore-styling.css">
     <link rel="stylesheet" href="assets/css/font.css">
     <link rel="stylesheet" href="assets/css/container-styling.css">
+    <link rel="stylesheet" href="assets/css/server-picker.css">
+    <link rel="stylesheet" href="assets/css/menu.css">
+
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+<!-- 
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-1029460747410605",
+        enable_page_level_ads: true
+    });
+    </script> -->
+
 </head>
 <body>
 <body ondragover="event.preventDefault()" ondragstart="return false;" ondrop="return false;" draggable="false">
@@ -17,7 +42,7 @@
     <div id="names">
     </div>
     
-    <div id="hiscores">
+    <div id="hiscores" style="display: none">
         <div id="hslist">
             <div id="leaderboard">
                 <span>
@@ -32,23 +57,42 @@
 
         </div>
     </div>
-    <div id="menu"></div>
+    <div id="menu">
+        <div id="serverPicker">
+        </div>
+        <div id="menu-title">noescape.io</div>
+        <div id="menu-hs"></div>
+        <div id="menu-msg">
+            How to play: Control your
+            character by holding the mouse button.
+        </div>
+        <div>
+            <input spellcheck="false" id="user-name" placeholder="Name" />
+            <a id="play-button" href="javascript:;">Play</a>
+        </div>
+    </div>
 </div>
 
 <script src="js/config.js"></script>
+<script src="js/serverRetriever.js"></script>
+<script src="js/menu/menu.js"></script>
+<script src="js/menu/serverPicker.js"></script>
 <script src="js/graphics-tool/initialize-canvas.js">
     /* exposes canvas.el canvas.height canvas.width*/
 </script>
+<script src="js/game-tools/unit.js"></script>
 <script src="js/graphics-tool/utils.js"></script>
 <script src="js/graphics-tool/initialize-webgl.js"></script>
 <script src="js/graphics-tool/renderingStrategy.js"></script>
 <script src="js/graphics-tool/renderingStrategyImage.js"></script>
 <script src="js/graphics-tool/drawCircle.js"></script>
 <script src="js/graphics-tool/drawPicture.js"></script>
+<script src="js/game/state.js"></script>
 <script src="js/game/hiscores.js"></script>
 <script src="js/game/name-tags.js"></script>
 <script src="js/game/game.js"></script>
 <script src="js/game/connection.js"></script>
+<script src="js/game/kickoff.js"></script> 
 <!-- <audio id="sound" src='sound.wav'></audio> -->
 
 
