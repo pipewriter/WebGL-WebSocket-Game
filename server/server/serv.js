@@ -140,6 +140,11 @@ wss.on('connection', function connection(ws) {
 
         ws.on('message', messageListener);
 
+        ws.on('error', () => {
+            console.log('CAUGHT ERROR from ON ERROR!!');
+            this.isDead = true;            
+        });
+
         this.update = (delta, blackholes) => {
             // this.x = clampAdd(this.x, this.uvx * delta * this.vel, MAX_X, MIN_X);
             // this.y = clampAdd(this.y, this.uvy * delta * this.vel, MAX_Y, MIN_Y);
