@@ -116,6 +116,11 @@ wss.on('connection', function connection(ws) {
         this.id = id++;
         this.guideStrength = 100;
         this.isSwallowed = false;
+        
+        this.birthMilisecond = now();
+        this.killCount = 0;
+        this.planetMassConsumed = this.m;
+        this.playerMassConsumed = 0;
 
         respawn(this);
 
@@ -124,7 +129,7 @@ wss.on('connection', function connection(ws) {
                 let playerData = JSON.parse(message);
                 if (this.state === 'JOINED') {
 
-                    if (playerData.name) {
+                    if (playerData.name && typeof playerData.name === 'string' && playerData.name.length < 50) {
                         this.name = playerData.name
                     } else {
                         this.name = 'unnamed';
@@ -156,9 +161,26 @@ wss.on('connection', function connection(ws) {
 
         ws.on('message', messageListener);
 
+        this.gameOver = ({endingType, endingString}) => {
+            this.results = {
+                type: 2,
+                endingType,
+                endingString,
+                scoreCard: {
+                    timeAlive: now() - this.birthMilisecond,
+                    id: 'AABB', //soon to be uuid()
+                    name: this.name,
+                    nass: this.m,
+                    unlimitedMass: this.unlimitedMass,
+                    killCount: this.killCount,
+                    massPlanets: this.planetMassConsumed,
+                    massPlayers: this.playerMassConsumed
+                }
+            }
+            this.isDead = true
+        }
+
         this.update = (delta, blackholes) => {
-            // this.x = clampAdd(this.x, this.uvx * delta * this.vel, MAX_X, MIN_X);
-            // this.y = clampAdd(this.y, this.uvy * delta * this.vel, MAX_Y, MIN_Y);
             let [sumfx, sumfy] = [0,0];
             blackholes.forEach(blackhole => {
                 if(this != blackhole){
@@ -203,14 +225,12 @@ wss.on('connection', function connection(ws) {
                             if(this.m > blackhole.m && !blackhole.isSwallowed){
                                 increaseMass(this, blackhole);
                                 this.r = getRad(this.m);
-                                blackhole.sendFinal = true
-                                blackhole.results = {
-                                    type: 2,
-                                    killerType: 1,
-                                    reason: this.name,
-                                    finalScore: blackhole.m
-                                }
-                                blackhole.isDead = true
+                                this.killCount++;
+                                blackhole.gameOver({
+                                    endingType: 'Player',
+                                    endingString: this.name
+                                });
+                                this.playerMassConsumed += blackhole.m;
                             }
                         }
                     });
@@ -222,23 +242,25 @@ wss.on('connection', function connection(ws) {
                         increaseMass(this, planet);
                         this.r = getRad(this.m);
                         respawn(planet, true);
+                        this.planetMassConsumed += planet.m;
                     }
                 })
             });
             collidedWith(this, gargantuaConfig, ({collided}) => {
                 const blackhole = gargantuaConfig;
                 if(collided){
-                    console.log('gargantuad!');
-                    this.isDead = true
-                    this.sendFinal = true
-                    this.results = {
-                        type: 2,
-                        killerType: 0,
-                        reason: 'Gargantua',
-                        finalScore: this.m
-                    }
+                    this.gameOver({
+                        endingType: 'Gargantua',
+                        endingString: 'Gargantua'
+                    });
                 }
             });
+            if(Math.ceil(this.m) >= 1000){
+                this.gameOver({
+                    endingType: 'MaxMass',
+                    endingString: 'MaxMass'
+                });
+            }
         }
 
         this.sendMessage = (message) => {
@@ -252,10 +274,8 @@ wss.on('connection', function connection(ws) {
 
         this.destroy = () => {
             try{
-                if(this.sendFinal){
-                    const tombstone = JSON.stringify(this.results);
-                    ws.send(tombstone);
-                }
+                const tombstone = JSON.stringify(this.results);
+                ws.send(tombstone);
             }catch(e){}
             console.log("closing websocket and removing listener");
             ws.removeListener("message", messageListener);
@@ -325,9 +345,6 @@ Array.prototype.forEachPlaying = (func) => {
         clients.forEachPlaying(client => {
             client.update(delta, clients);
         });
-        // clients.forEachPlaying(blackhole => {
-        //     blackhole.m *= .999;
-        // });
         planets.forEach(planet => {
             (function planetUpdate(){
                 let sumfx = 0;
