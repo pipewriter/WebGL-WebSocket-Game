@@ -15,12 +15,8 @@
     box-sizing: border-box;
 }
 
-#menu-hs {
-    padding-bottom: 20px;
-    font-size: 1.5em;
-}
-
 #menu-msg {
+    margin-top: 40px;
     padding-bottom: 70px;
     font-size: 1.5em;
 }

@@ -35,17 +35,10 @@ window.addEventListener("load", () => {
         menu.style.display = 'flex';
         hiscores.style.display = 'none';
         
-        const [hsField, msgField] = [
-            document.getElementById("menu-hs"),
+        const [msgField] = [
             document.getElementById("menu-msg")
         ];
         
-        if(hiscore){
-            hsField.innerHTML = `Hiscore: ${Math.ceil(hiscore)}`;
-            hsField.style.color = "indianred";
-        }else{
-            hsField.innerHTML = "";
-        }
         msgField.innerHTML = message;
         inGame = false;
     }

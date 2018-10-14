@@ -1,0 +1,28 @@
+#globalHs {
+    font-size: 1.1em;
+    margin-top: 100px;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 2px;
+    padding: 4px;
+    border-color: blueviolet;
+
+}
+
+#globalHs > tr {
+
+}
+#globalHs td,
+#globalHs th {
+    width: 100px;
+    padding: 3px 10px;
+    text-align: left;
+}
+
+#nameCol {
+    width: 200px;
+}
+
+.yourScore {
+    color: indianred;
+}

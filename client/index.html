@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="assets/css/container-styling.css">
     <link rel="stylesheet" href="assets/css/server-picker.css">
     <link rel="stylesheet" href="assets/css/menu.css">
+    <link rel="stylesheet" href="assets/css/global-hiscores.css">
 
     <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
@@ -49,7 +50,7 @@
                     Leaderboard
                 </span>
             </div>
-            <table id="hsTable">
+            <table id="ingameHsTable">
 
             </table>
         </div>
@@ -60,7 +61,10 @@
     <div id="menu">
         <div id="serverPicker">
         </div>
-        <div id="menu-title">noescape.io</div>
+        <!-- <div id="menu-title">noescape.io</div> -->
+        <table id="globalHs">
+            
+        </table>
         <div id="menu-hs"></div>
         <div id="menu-msg">
             How to play: Control your
@@ -77,9 +81,8 @@
 <script src="js/serverRetriever.js"></script>
 <script src="js/menu/menu.js"></script>
 <script src="js/menu/serverPicker.js"></script>
-<script src="js/graphics-tool/initialize-canvas.js">
-    /* exposes canvas.el canvas.height canvas.width*/
-</script>
+<script src="js/graphics-tool/initialize-canvas.js"></script>
+<script src="js/menu/globalHiscores.js"></script>
 <script src="js/game-tools/unit.js"></script>
 <script src="js/graphics-tool/utils.js"></script>
 <script src="js/graphics-tool/initialize-webgl.js"></script>

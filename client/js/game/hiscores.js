@@ -1,5 +1,5 @@
 (()=>{
-    const hsEl = document.getElementById("hsTable");
+    const hsEl = document.getElementById("ingameHsTable");
     const personalEl = document.getElementById("personalStats");
     const generateRow = ({score, name}, place, id) => {
         let crownColumn = '<td></td>';
