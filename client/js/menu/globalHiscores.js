@@ -74,7 +74,7 @@ const titleRow = fillRow(['Rank', 'Name', 'Time', 'Mass', 'Planets', 'Players', 
                 },
                 {
                     rank: '3',
-                    name: 'Jamie',
+                    name: 'Jamie kjhjkhkjhkjhkjhkhkjh',
                     time: '6:32',
                     mass: 721,
                     planets: '100%',

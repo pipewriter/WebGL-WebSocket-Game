@@ -17,6 +17,10 @@
     width: 100px;
     padding: 3px 10px;
     text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
 }
 
 #nameCol {
