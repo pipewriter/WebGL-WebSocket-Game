@@ -9,6 +9,10 @@ let collidedWith = require('./physics/collidedWith');
 let spawnControl = require('./physics/spawnControl');
 let orbitalVelocity = require('./physics/orbitalVelocity');
 
+const {HISCORE_ENDPOINT} = require('./config');
+const axios = require('axios');
+const uuid = require('uuid');
+
 const wss = new WebSocket.Server({ port: 8080 });
 
 let clients = [];
@@ -168,9 +172,9 @@ wss.on('connection', function connection(ws) {
                 endingString,
                 scoreCard: {
                     timeAlive: now() - this.birthMilisecond,
-                    id: 'AABB', //soon to be uuid()
+                    id: uuid(),
                     name: this.name,
-                    nass: this.m,
+                    mass: this.m,
                     unlimitedMass: this.unlimitedMass,
                     killCount: this.killCount,
                     massPlanets: this.planetMassConsumed,
@@ -274,12 +278,23 @@ wss.on('connection', function connection(ws) {
 
         this.destroy = () => {
             try{
-                const tombstone = JSON.stringify(this.results);
-                ws.send(tombstone);
+                if(this.results){
+                    const tombstone = JSON.stringify(this.results);
+                    ws.send(tombstone);
+                }
             }catch(e){}
             console.log("closing websocket and removing listener");
             ws.removeListener("message", messageListener);
             ws.close();
+            if(this.results){
+                try{
+                    axios.post(HISCORE_ENDPOINT,{
+                        score: this.results.scoreCard
+                    });
+                }catch(e){
+                    console.log("Error recording hiscore");
+                }
+            }
         }
 
     }
