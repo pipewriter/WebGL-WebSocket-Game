@@ -173,7 +173,7 @@ wss.on('connection', function connection(ws) {
                 scoreCard: {
                     id: uuid(),
                     time: now() - this.birthMilisecond,
-                    mass: this.m,
+                    mass: Math.ceil(this.m),
                     date: (new Date()).getTime(),
                     name: this.name,
                     unlimitedMass: this.unlimitedMass,

@@ -1,6 +1,6 @@
 const fillScoreRow = (player = {}, className) => (
     fillRow(
-        ['rank', 'name', 'time', 'mass', 'planets', 'players', 'kills']
+        ['rank', 'name', 'mass', 'time', 'planets', 'players', 'kills']
             .map(prop => player[prop]),
         'td',
         className
@@ -18,7 +18,7 @@ const fillRow = (labelArray = [], tagType = 'td', className) => {
 }
 
 const emptyRow = fillScoreRow();
-const titleRow = fillRow(['Rank', 'Name', 'Time', 'Mass', 'Planets', 'Players', 'Kills'], 'th');
+const titleRow = fillRow(['Rank', 'Name', 'Mass', 'Time', 'Planets', 'Players', 'Kills'], 'th');
 
 (() => {
     
@@ -42,24 +42,25 @@ const titleRow = fillRow(['Rank', 'Name', 'Time', 'Mass', 'Planets', 'Players', 
         const {unlimitedMass, massPlanets, massPlayers} = unformattedPlayer;
         const players = massPlayers / unlimitedMass;
         const formattedPlayer = {
-            rank: index,
+            rank: typeof index == 'string' ? index : index + 1,
             name: unformattedPlayer.name,
             time,
             mass: Math.ceil(unformattedPlayer.mass),
             players: `${Math.ceil(players)}%`,
             planets: `${Math.floor(100-players)}%`,
-            kills: unformattedPlayer.killCount,
+            kills: unformattedPlayer.killCount + '',
             id: unformattedPlayer.id
         };
+        console.log(formattedPlayer)
         return formattedPlayer;
     };
 
     window.GAME.fillHsTable = ({topTenPlayers, playerData}) => {
 
-        topTenPlayers.map(
+        topTenPlayers = topTenPlayers.map(
             formatPlayer
         );
-        playerData = formatPlayer(playerData, '-');
+        playerData = formatPlayer(playerData, ' ');
 
         let top10Data = [];
         for(let i = 0; i < 10; i++){

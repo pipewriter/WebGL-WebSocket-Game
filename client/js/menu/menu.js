@@ -42,10 +42,18 @@ window.addEventListener("load", () => {
         window.GAME.fillHsTableEmpty();
         
         setTimeout(() => {
-            window.GAME.fillHsTable({
-                topTenPlayers: [],
-                playerData: scoreCard
-            })
+            let topTenPlayers = [];
+
+            var oReq = new XMLHttpRequest();
+            oReq.open("GET", "http://localhost:12129/get-scores");
+            oReq.onload = () => {
+                const {today, allTime} = JSON.parse(oReq.responseText);
+                window.GAME.fillHsTable({
+                    topTenPlayers: allTime,
+                    playerData: scoreCard
+                })
+            }
+            oReq.send();
         }, 1000);
 
         msgField.innerHTML = message;
