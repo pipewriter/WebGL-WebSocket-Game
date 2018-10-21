@@ -171,10 +171,11 @@ wss.on('connection', function connection(ws) {
                 endingType,
                 endingString,
                 scoreCard: {
-                    timeAlive: now() - this.birthMilisecond,
                     id: uuid(),
-                    name: this.name,
+                    time: now() - this.birthMilisecond,
                     mass: this.m,
+                    date: (new Date()).getTime(),
+                    name: this.name,
                     unlimitedMass: this.unlimitedMass,
                     killCount: this.killCount,
                     massPlanets: this.planetMassConsumed,
