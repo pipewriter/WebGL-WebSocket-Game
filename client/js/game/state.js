@@ -5,8 +5,8 @@
         renderTitleScreen(reason);
     }
 
-    function renderTitleScreen(msg, finalScore){
-        window.GAME.displayMenu({message: msg, hiscore: finalScore});
+    function renderTitleScreen(msg, scoreCard){
+        window.GAME.displayMenu({message: msg, scoreCard});
     }
 
     window.GAME.startGame = function startGame(){
@@ -15,19 +15,23 @@
 
     window.GAME.handleKillInfo = function handleKillInfo(killInfo){
         const {
-            killerType,
-            reason,
-            finalScore
+            endingType,
+            endingString,
+            scoreCard
         } = killInfo;
 
         let msg;
-        if(killerType === 0){
+        if(endingType === 'Gargantua'){
             msg = `You were swallowed by the supermassive black hole`;
-        }else if(killerType === 1){
-            msg = `You were swallowed by the player: ${reason}`;
+        }else if(endingType === 'Player'){
+            msg = `You were swallowed by the player: ${endingString}`;
+        }else if(endingType === 'MaxMass'){
+            msg = 'You reached 1000 mass! You win!';
+        }else{
+            msg = 'error ending game';
         }
 
-        renderTitleScreen(msg, finalScore);
+        renderTitleScreen(msg, scoreCard);
     }
 
 })();

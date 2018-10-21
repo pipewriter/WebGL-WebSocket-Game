@@ -30,7 +30,7 @@ window.addEventListener("load", () => {
         }
     });
     
-    window.GAME.displayMenu = function displayMenu({message, hiscore}){
+    window.GAME.displayMenu = function displayMenu({message, scoreCard}){
         window.GAME.menuHidden = false;
         menu.style.display = 'flex';
         hiscores.style.display = 'none';
@@ -39,6 +39,15 @@ window.addEventListener("load", () => {
             document.getElementById("menu-msg")
         ];
         
+        window.GAME.fillHsTableEmpty();
+        
+        setTimeout(() => {
+            window.GAME.fillHsTable({
+                topTenPlayers: [],
+                playerData: scoreCard
+            })
+        }, 1000);
+
         msgField.innerHTML = message;
         inGame = false;
     }
