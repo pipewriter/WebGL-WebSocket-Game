@@ -34,7 +34,15 @@ const titleRow = fillRow(['Rank', 'Name', 'Mass', 'Time', 'Planets', 'Players', 
                 div.classList.remove("selected");
             })
         };
+        
+        divs.forEach(div => {
+            div.onclick = () => {
+                deselectDivs();
+                div.classList.add("selected");
+            }
 
+            
+        });
 
     })();
     
