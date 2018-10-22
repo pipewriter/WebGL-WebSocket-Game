@@ -45,7 +45,7 @@ window.addEventListener("load", () => {
             let topTenPlayers = [];
 
             var oReq = new XMLHttpRequest();
-            oReq.open("GET", "http://localhost:12129/get-scores");
+            oReq.open("GET", "http://46.101.254.103:12129/get-scores");
             oReq.onload = () => {
                 const {today, allTime} = JSON.parse(oReq.responseText);
                 const todayEl = document.querySelector('.daily');
