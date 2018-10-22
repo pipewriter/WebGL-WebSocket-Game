@@ -184,6 +184,11 @@ wss.on('connection', function connection(ws) {
             }
             this.isDead = true
         }
+        
+        ws.on('error', () => {
+            console.log('CAUGHT ERROR from ON ERROR!!');
+            this.isDead = true;            
+        });
 
         this.update = (delta, blackholes) => {
             let [sumfx, sumfy] = [0,0];
