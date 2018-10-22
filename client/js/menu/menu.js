@@ -48,10 +48,18 @@ window.addEventListener("load", () => {
             oReq.open("GET", "http://localhost:12129/get-scores");
             oReq.onload = () => {
                 const {today, allTime} = JSON.parse(oReq.responseText);
+                const todayEl = document.querySelector('.daily');
+                const allTimeEl = document.querySelector('.all-time');
+                window.GAME.fillHsTable({
+                    topTenPlayers: today,
+                    playerData: scoreCard,
+                    el: todayEl
+                });
                 window.GAME.fillHsTable({
                     topTenPlayers: allTime,
-                    playerData: scoreCard
-                })
+                    playerData: scoreCard,
+                    el: allTimeEl
+                });
             }
             oReq.send();
         }, 500);

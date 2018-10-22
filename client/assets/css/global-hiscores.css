@@ -1,4 +1,4 @@
-#globalHs {
+.globalHs {
     font-size: 1.1em;
     margin-top: 100px;
     border-style: solid;
@@ -8,12 +8,8 @@
     border-color: blueviolet;
 
 }
-
-#globalHs > tr {
-
-}
-#globalHs td,
-#globalHs th {
+.globalHs td,
+.globalHs th {
     width: 100px;
     padding: 3px 10px;
     text-align: left;

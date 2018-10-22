@@ -22,15 +22,19 @@ const titleRow = fillRow(['Rank', 'Name', 'Mass', 'Time', 'Planets', 'Players', 
 
 (() => {
     
-    let globalHsEl = document.getElementById('globalHs');
+    let globalHsElList = document.querySelectorAll('.globalHs');
     let titlEl = document.getElementById('menu-title');
     let switcherEl = document.getElementById('hs-switcher');
 
     (() => {
         const divs = document.querySelectorAll('#hs-switcher > div');
+        const todayEl = document.querySelector('.daily');
+        const allTimeEl = document.querySelector('.all-time');
         
         const deselectDivs = () => {
             divs.forEach(div => {
+                todayEl.style.display = 'none';
+                allTimeEl.style.display = 'none';
                 div.classList.remove("selected");
             })
         };
@@ -39,15 +43,21 @@ const titleRow = fillRow(['Rank', 'Name', 'Mass', 'Time', 'Planets', 'Players', 
             div.onclick = () => {
                 deselectDivs();
                 div.classList.add("selected");
+                const hsType = div.getAttribute("hsType");
+                document.querySelector(`.${hsType}`).style.display = 'initial';
+                window.GAME.selectedHiscoreVersion = hsType;
             }
 
             
         });
 
     })();
+    window.GAME.selectedHiscoreVersion = 'daily';
     
     window.GAME.fillHsTableEmpty = function initialDashMatrix(){
-        globalHsEl.style.display = 'initial';
+        const hsVer = window.GAME.selectedHiscoreVersion;
+        const hsEl = document.querySelector(`.${hsVer}`);
+        hsEl.style.display = 'initial';
         switcherEl.style.display = 'initial';
         titlEl.style.display = 'none';
         let arr = [];
@@ -55,7 +65,8 @@ const titleRow = fillRow(['Rank', 'Name', 'Mass', 'Time', 'Planets', 'Players', 
         for(let i = 0; i < 11; i++){
             arr.push(emptyRow);
         }
-        globalHsEl.innerHTML = arr.join('');
+        // globalHsEl.innerHTML = arr.join('');
+        globalHsElList.forEach(el => el.innerHTML = arr.join(''));
     };
 
     // window.GAME.fillHsTableEmpty();
@@ -79,7 +90,7 @@ const titleRow = fillRow(['Rank', 'Name', 'Mass', 'Time', 'Planets', 'Players', 
         return formattedPlayer;
     };
 
-    window.GAME.fillHsTable = ({topTenPlayers, playerData}) => {
+    window.GAME.fillHsTable = ({topTenPlayers, playerData, el}) => {
 
         topTenPlayers = topTenPlayers.map(
             formatPlayer
@@ -96,7 +107,7 @@ const titleRow = fillRow(['Rank', 'Name', 'Mass', 'Time', 'Planets', 'Players', 
             ));
         rows.push(fillScoreRow(playerData, 'yourScore'));
         rows.unshift(titleRow);
-        globalHsEl.innerHTML = rows.join('')
+        el.innerHTML = rows.join('')
     }
 
     (function test(){
