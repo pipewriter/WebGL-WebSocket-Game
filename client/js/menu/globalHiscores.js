@@ -46,9 +46,7 @@ const titleRow = fillRow(['Rank', 'Name', 'Mass', 'Time', 'Planets', 'Players', 
                 const hsType = div.getAttribute("hsType");
                 document.querySelector(`.${hsType}`).style.display = 'initial';
                 window.GAME.selectedHiscoreVersion = hsType;
-            }
-
-            
+            }            
         });
 
     })();
