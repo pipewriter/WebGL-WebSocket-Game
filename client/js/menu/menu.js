@@ -54,7 +54,7 @@ window.addEventListener("load", () => {
                 })
             }
             oReq.send();
-        }, 1000);
+        }, 500);
 
         msgField.innerHTML = message;
         inGame = false;
