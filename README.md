@@ -4,8 +4,8 @@
 
 This Repo contains the core server and client found in their respective folders:
 
-* /client
 * /server
+* /client
 
 
 
