@@ -1,5 +1,5 @@
 (() => {
-    const {servers} = window.CONFIG;
+    const {servers} = window.CONFIG || {servers: [{ name: 'localhost', wsAddress: 'localhost'}]};
     const storageToken = 'preferred server'
     window.SERVERS = {
         get: function get(){

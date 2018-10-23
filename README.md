@@ -1,11 +1,36 @@
-# io-game
+# [noescape.io - Play it Live](http://noescape.io)
 
-This game uses a custom webgl tool to render to the canvas.
+![no escape io open source javascript game](https://raw.githubusercontent.com/pipewriter/noescape.io/master/noescape.png)
 
-## future of project
+This Repo contains the core server and client found in their respective folders:
 
-I hope to get this project out sooner rather than later.
+* /client
+* /server
 
-## log
-- Aug 25th 2018: git webhook now refreshes both client and server
-- Aug 25th 2018: fought for like 4 hours on stupid *'sudo git pull'* bullcrap 
+
+
+noescape.io uses the following technologies:
+
+* Node packages: ws, performance-now, axios, uuid
+* Raw WebGL Calls
+
+Everything else is new code written for this project.
+
+
+
+## Running Locally
+
+```bash
+cd ./server
+npm i
+cd ..
+cd ./client
+npm i
+cd ..
+./start-servers.sh
+# You may also need to run sudo ./kill.sh to kill both servers
+```
+
+### Now visit http://localhost
+
+viola!
