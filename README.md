@@ -35,4 +35,4 @@ cd ..
 
 viola!
 
-(https://github.com/pipewriter/noescape.io/raw/master/localhost.png)
+![running on localhost](https://github.com/pipewriter/noescape.io/raw/master/localhost.png)
