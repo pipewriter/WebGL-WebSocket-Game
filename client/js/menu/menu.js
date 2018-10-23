@@ -45,24 +45,26 @@ window.addEventListener("load", () => {
             let topTenPlayers = [];
 
             var oReq = new XMLHttpRequest();
-            oReq.open("GET", "http://46.101.254.103:12129/get-scores");
-            oReq.onload = () => {
-                const {today, allTime} = JSON.parse(oReq.responseText);
-                const todayEl = document.querySelector('.daily');
-                const allTimeEl = document.querySelector('.all-time');
-                window.GAME.fillHsTable({
-                    topTenPlayers: today,
-                    playerData: scoreCard,
-                    el: todayEl
-                });
-                window.GAME.fillHsTable({
-                    topTenPlayers: allTime,
-                    playerData: scoreCard,
-                    el: allTimeEl
-                });
+            if(window.CONFIG){
+                oReq.open("GET", window.CONFIG.hiscoreUrl);
+                oReq.onload = () => {
+                    const {today, allTime} = JSON.parse(oReq.responseText);
+                    const todayEl = document.querySelector('.daily');
+                    const allTimeEl = document.querySelector('.all-time');
+                    window.GAME.fillHsTable({
+                        topTenPlayers: today,
+                        playerData: scoreCard,
+                        el: todayEl
+                    });
+                    window.GAME.fillHsTable({
+                        topTenPlayers: allTime,
+                        playerData: scoreCard,
+                        el: allTimeEl
+                    });
+                }
             }
             oReq.send();
-        }, 500);
+        }, 500); //this delay is a tacky solution to allow the post-scores to finish in time
 
         msgField.innerHTML = message;
         inGame = false;

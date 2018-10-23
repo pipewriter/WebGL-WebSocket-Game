@@ -1,5 +1,5 @@
 (() => {
-    const {servers} = window.CONFIG;
+    const {servers} = window.CONFIG || {servers: [{ name: 'localhost', wsAddress: 'localhost'}]};
     const buttons = [];
     const selectedClass = 'selected';
     const buttonContainer = document.getElementById('serverPicker');
