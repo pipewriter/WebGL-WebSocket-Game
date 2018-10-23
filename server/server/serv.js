@@ -9,7 +9,10 @@ let collidedWith = require('./physics/collidedWith');
 let spawnControl = require('./physics/spawnControl');
 let orbitalVelocity = require('./physics/orbitalVelocity');
 
-const {HISCORE_ENDPOINT} = require('./config');
+try{
+    const {HISCORE_ENDPOINT} = require('./config');
+}catch(e){};
+
 const axios = require('axios');
 const uuid = require('uuid');
 
@@ -294,9 +297,11 @@ wss.on('connection', function connection(ws) {
             ws.close();
             if(this.results){
                 try{
-                    axios.post(HISCORE_ENDPOINT,{
-                        score: this.results.scoreCard
-                    });
+                    if(HISCORE_ENDPOINT){
+                        axios.post(HISCORE_ENDPOINT,{
+                            score: this.results.scoreCard
+                        });
+                    }
                 }catch(e){
                     console.log("Error recording hiscore");
                 }

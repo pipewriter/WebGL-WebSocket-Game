@@ -1,6 +1,6 @@
 # [noescape.io - Play it Live](http://noescape.io)
 
-![no escape io open source javascript game](https://raw.githubusercontent.com/pipewriter/noescape.io/master/noescape.png)
+![no escape io open source javascript game](https://github.com/pipewriter/noescape.io/raw/master/noescape.png)
 
 This Repo contains the core server and client found in their respective folders:
 
