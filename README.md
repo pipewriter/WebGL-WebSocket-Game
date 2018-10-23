@@ -34,3 +34,5 @@ cd ..
 ### Now visit http://localhost
 
 viola!
+
+(https://github.com/pipewriter/noescape.io/raw/master/localhost.png)
