@@ -5,7 +5,7 @@
   "main": "connection.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "sudo npx http-server -p 80"
+    "start": "sudo npx http-server -p 8081"
   },
   "author": "",
   "license": "ISC",
